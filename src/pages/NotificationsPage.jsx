@@ -3,13 +3,11 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { notificationAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useUI } from '../context/hooks';
 import { FiCheck, FiTrash2 } from 'react-icons/fi';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { darkMode } = useUI();
 
   useEffect(() => {
     fetchNotifications();
@@ -68,7 +66,7 @@ export default function NotificationsPage() {
     <>
       <div className="max-w-4xl mx-auto">
               <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
                 <button onClick={handleMarkAllAsRead} className="btn-secondary text-sm">
                   Mark All as Read
                 </button>
@@ -87,9 +85,9 @@ export default function NotificationsPage() {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">{notification.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{notification.message}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                          <h3 className="font-semibold text-gray-900">{notification.title}</h3>
+                          <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                          <p className="text-xs text-gray-500 mt-2">
                             {new Date(notification.createdAt).toLocaleDateString('en-US', {
                               year: 'numeric',
                               month: 'short',
@@ -103,14 +101,14 @@ export default function NotificationsPage() {
                           {!notification.isRead && (
                             <button
                               onClick={() => handleMarkAsRead(notification._id)}
-                              className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 rounded-lg transition-colors"
+                              className="p-2 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
                             >
                               <FiCheck size={18} />
                             </button>
                           )}
                           <button
                             onClick={() => handleDelete(notification._id)}
-                            className="p-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 rounded-lg transition-colors"
+                            className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
                           >
                             <FiTrash2 size={18} />
                           </button>
@@ -120,7 +118,7 @@ export default function NotificationsPage() {
                   ))
                 ) : (
                   <div className="text-center py-12">
-                    <p className="text-gray-600 dark:text-gray-400 text-lg">No notifications</p>
+                    <p className="text-gray-600 text-lg">No notifications</p>
                   </div>
                 )}
               </div>

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/hooks';
 import { motion } from 'framer-motion';
-import { useUI } from '../context/hooks';
 import { FiUser, FiMail, FiBriefcase, FiCalendar } from 'react-icons/fi';
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const { darkMode } = useUI();
 
   if (!user) {
     return <div>Loading...</div>;
@@ -15,7 +13,7 @@ export default function ProfilePage() {
   return (
     <>
       <div className="max-w-2xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">My Profile</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-8">My Profile</h1>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -27,33 +25,33 @@ export default function ProfilePage() {
                     <FiUser size={48} className="text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{user.fullName}</h2>
-                    <p className="text-gray-600 dark:text-gray-400 capitalize">{user.role}</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{user.fullName}</h2>
+                    <p className="text-gray-600 capitalize">{user.role}</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                     <FiMail size={20} className="text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{user.email}</p>
+                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="font-medium text-gray-900">{user.email}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                     <FiBriefcase size={20} className="text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Role</p>
-                      <p className="font-medium text-gray-900 dark:text-white capitalize">{user.role}</p>
+                      <p className="text-sm text-gray-600">Role</p>
+                      <p className="font-medium text-gray-900 capitalize">{user.role}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                     <FiCalendar size={20} className="text-blue-600" />
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Member Since</p>
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm text-gray-600">Member Since</p>
+                      <p className="font-medium text-gray-900">
                         {new Date(user.createdAt).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -64,11 +62,11 @@ export default function ProfilePage() {
                   </div>
 
                   {user.lastLogin && (
-                    <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                       <FiCalendar size={20} className="text-green-600" />
                       <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Last Login</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm text-gray-600">Last Login</p>
+                        <p className="font-medium text-gray-900">
                           {new Date(user.lastLogin).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',

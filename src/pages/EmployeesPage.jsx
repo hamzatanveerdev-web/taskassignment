@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { employeeAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { useUI } from '../context/hooks';
 
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
@@ -13,7 +12,6 @@ export default function EmployeesPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ fullName: '', email: '', role: 'employee' });
-  const { darkMode } = useUI();
 
   useEffect(() => {
     fetchEmployees();
@@ -105,7 +103,7 @@ export default function EmployeesPage() {
     <>
       <div className="max-w-7xl mx-auto">
               <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Employees</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
                 {!editingId && (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -208,22 +206,22 @@ export default function EmployeesPage() {
                     className="card flex items-center justify-between"
                   >
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{employee.fullName}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{employee.email}</p>
-                      <span className="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded">
+                      <h3 className="font-semibold text-gray-900">{employee.fullName}</h3>
+                      <p className="text-sm text-gray-600">{employee.email}</p>
+                      <span className="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
                         {employee.role.toUpperCase()}
                       </span>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(employee)}
-                        className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 rounded-lg transition-colors"
+                        className="p-2 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
                       >
                         <FiEdit2 size={18} />
                       </button>
                       <button
                         onClick={() => handleDelete(employee._id)}
-                        className="p-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 rounded-lg transition-colors"
+                        className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
                       >
                         <FiTrash2 size={18} />
                       </button>
@@ -234,7 +232,7 @@ export default function EmployeesPage() {
 
               {employees.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400 text-lg">No employees found</p>
+                  <p className="text-gray-600 text-lg">No employees found</p>
                 </div>
               )}
       </div>

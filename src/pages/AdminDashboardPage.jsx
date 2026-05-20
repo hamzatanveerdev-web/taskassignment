@@ -4,14 +4,12 @@ import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TaskCard from '../components/TaskCard';
-import { useUI } from '../context/hooks';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function AdminDashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { darkMode } = useUI();
 
   useEffect(() => {
     fetchDashboardData();
@@ -70,24 +68,24 @@ export default function AdminDashboardPage() {
   return (
     <>
       <div className="max-w-7xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Dashboard</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
 
               {analytics && (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">Total Tasks</p>
+                    <p className="text-gray-600 text-sm">Total Tasks</p>
                     <p className="text-3xl font-bold text-blue-600">{analytics.totalTasks}</p>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="card">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">Pending</p>
+                    <p className="text-gray-600 text-sm">Pending</p>
                     <p className="text-3xl font-bold text-yellow-600">{analytics.pendingTasks}</p>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">In Progress</p>
+                    <p className="text-gray-600 text-sm">In Progress</p>
                     <p className="text-3xl font-bold text-blue-600">{analytics.startedTasks}</p>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">Completed</p>
+                    <p className="text-gray-600 text-sm">Completed</p>
                     <p className="text-3xl font-bold text-green-600">{analytics.completedTasks}</p>
                   </motion.div>
                 </div>
@@ -95,7 +93,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Task Status Distribution</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Task Status Distribution</h2>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -108,7 +106,7 @@ export default function AdminDashboardPage() {
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="card">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Priority Breakdown</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Priority Breakdown</h2>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -132,7 +130,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Tasks</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Tasks</h2>
                 <div className="grid gap-4">
                   {tasks.map((task) => (
                     <TaskCard 

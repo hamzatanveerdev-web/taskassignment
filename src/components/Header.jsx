@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiMenu, FiX, FiBell, FiLogOut, FiMoon, FiSun } from 'react-icons/fi';
+import { FiMenu, FiX, FiBell, FiLogOut } from 'react-icons/fi';
 import { useAuth, useUI } from '../context/hooks';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ onMenuClick }) {
   const { logout } = useAuth();
-  const { darkMode, toggleDarkMode, unreadCount } = useUI();
+  const { unreadCount } = useUI();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,9 +16,7 @@ export default function Header({ onMenuClick }) {
 
   return (
     <motion.header
-      className={`${
-        darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      } border-b sticky top-0 z-40 transition-colors`}
+      className="bg-white border-gray-200 border-b sticky top-0 z-40 transition-colors"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
     >
@@ -26,9 +24,7 @@ export default function Header({ onMenuClick }) {
         <div className="flex items-center gap-4">
           <button
             onClick={onMenuClick}
-            className={`p-2 rounded-lg ${
-              darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-            } transition-colors`}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <FiMenu size={24} />
           </button>
@@ -40,7 +36,7 @@ export default function Header({ onMenuClick }) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/notifications')}
-            className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <FiBell size={20} />
             {unreadCount > 0 && (
@@ -51,15 +47,8 @@ export default function Header({ onMenuClick }) {
           </motion.button>
 
           <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
-          </button>
-
-          <button
             onClick={handleLogout}
-            className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 transition-colors"
+            className="p-2 rounded-lg hover:bg-red-100 text-red-600 transition-colors"
           >
             <FiLogOut size={20} />
           </button>

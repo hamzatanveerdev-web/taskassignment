@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { taskAPI, employeeAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { useUI } from '../context/hooks';
 
 export default function AssignTaskPage() {
   const [employees, setEmployees] = useState([]);
@@ -15,7 +14,6 @@ export default function AssignTaskPage() {
     dueDate: '',
     assignedTo: '',
   });
-  const { darkMode } = useUI();
 
   useEffect(() => {
     fetchEmployees();
@@ -56,7 +54,7 @@ export default function AssignTaskPage() {
   return (
     <>
       <div className="max-w-4xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Assign New Task</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-8">Assign New Task</h1>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -65,7 +63,7 @@ export default function AssignTaskPage() {
               >
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Task Title
                     </label>
                     <input
@@ -79,7 +77,7 @@ export default function AssignTaskPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Description
                     </label>
                     <textarea
@@ -94,7 +92,7 @@ export default function AssignTaskPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Priority
                       </label>
                       <select
@@ -109,7 +107,7 @@ export default function AssignTaskPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Due Date
                       </label>
                       <input
@@ -122,7 +120,7 @@ export default function AssignTaskPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Assign To
                       </label>
                       <select

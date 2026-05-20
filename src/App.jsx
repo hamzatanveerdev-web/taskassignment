@@ -39,7 +39,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
 // Main App Content
 function AppContent() {
   const { user, login, setLoading } = useAuth();
-  const { darkMode } = useUI();
 
   useEffect(() => {
     // Try to get current user if token exists
@@ -72,7 +71,7 @@ function AppContent() {
   }, [user]);
 
   return (
-    <div className={darkMode ? 'dark' : ''}>
+    <div>
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -191,8 +190,8 @@ function AppContent() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: darkMode ? '#1f2937' : '#ffffff',
-            color: darkMode ? '#ffffff' : '#000000',
+            background: '#ffffff',
+            color: '#000000',
           },
         }}
       />

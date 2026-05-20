@@ -50,15 +50,15 @@ export default function SetupPasswordPage() {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md"
       >
-        <div className="card bg-white dark:bg-gray-800 shadow-2xl">
+        <div className="card bg-white shadow-2xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-blue-600 mb-2">Setup Your Password</h1>
-            <p className="text-gray-600 dark:text-gray-400">Create a secure password for your account</p>
+            <p className="text-gray-600">Create a secure password for your account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
@@ -72,7 +72,7 @@ export default function SetupPasswordPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
               <input
