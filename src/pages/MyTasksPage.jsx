@@ -3,7 +3,6 @@ import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TaskCard from '../components/TaskCard';
-import { useUI } from '../context/hooks';
 import { FiFilter, FiSearch } from 'react-icons/fi';
 
 export default function MyTasksPage() {

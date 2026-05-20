@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { useUI } from '../context/hooks';
+
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/hooks';
