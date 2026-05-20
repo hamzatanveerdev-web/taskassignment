@@ -39,7 +39,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
 // Main App Content
 function AppContent() {
   const { user, login, setLoading } = useAuth();
-  const { darkMode, setIsPageVisible } = useUI();
+  const { darkMode } = useUI();
 
   useEffect(() => {
     // Try to get current user if token exists
@@ -70,19 +70,6 @@ function AppContent() {
       });
     }
   }, [user]);
-
-  // Add visibility detection
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      setIsPageVisible(!document.hidden);
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [setIsPageVisible]);
 
   return (
     <div className={darkMode ? 'dark' : ''}>
@@ -215,6 +202,8 @@ function AppContent() {
 
 // Main App Component
 export default function App() {
+
+  
   return (
     <AuthProvider>
       <UIProvider>

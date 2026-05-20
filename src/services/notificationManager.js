@@ -8,18 +8,16 @@ class NotificationManager {
   constructor() {
     this.isConnected = false;
     this.userId = null;
-    this.isPageVisible = true;
   }
 
   /**
    * Initialize socket connection and set up listeners
    */
-  initSocket(userId, isPageVisible) {
+  initSocket(userId) {
     this.userId = userId;
-    this.isPageVisible = isPageVisible;
 
     if (!socket) {
-      socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000', {
+      socket = io(process.env.REACT_APP_SOCKET_URL || 'https://taskassignmentbackend.onrender.com', {
         auth: {
           token: localStorage.getItem('token'),
         },
@@ -57,21 +55,16 @@ class NotificationManager {
   }
 
   /**
-   * Handle notification and show based on visibility
+   * Handle notification and show toast
    */
   handleNotification(data, type) {
-    console.log('Notification received:', { data, type, pageVisible: this.isPageVisible });
+    console.log('Notification received:', { data, type });
 
-    if (this.isPageVisible) {
-      // Show toast if page is visible
-      toast.success(data.message || data.title, {
-        duration: 5000,
-        position: 'top-right',
-      });
-    } else {
-      // Already handled by service worker for push notifications
-      console.log('Page not visible, notification will be handled by service worker');
-    }
+    // Always show toast for notifications
+    toast.success(data.message || data.title, {
+      duration: 5000,
+      position: 'top-right',
+    });
 
     // Call registered handlers
     notificationHandlers.forEach((handler) => {
@@ -91,18 +84,6 @@ class NotificationManager {
     return () => {
       notificationHandlers = notificationHandlers.filter((h) => h !== callback);
     };
-  }
-
-  /**
-   * Update page visibility state
-   */
-  updatePageVisibility(isVisible) {
-    this.isPageVisible = isVisible;
-    
-    // Notify socket about visibility change
-    if (socket && this.isConnected) {
-      socket.emit('userVisibility', { isVisible });
-    }
   }
 
   /**

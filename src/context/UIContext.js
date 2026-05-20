@@ -7,7 +7,6 @@ export const UIProvider = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode((prev) => {
@@ -31,8 +30,6 @@ export const UIProvider = ({ children }) => {
         setNotifications,
         unreadCount,
         setUnreadCount,
-        isPageVisible,
-        setIsPageVisible,
       }}
     >
       {children}

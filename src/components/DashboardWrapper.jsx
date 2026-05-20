@@ -8,13 +8,13 @@ import notificationManager from '../services/notificationManager';
 
 export default function DashboardWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { darkMode, isPageVisible } = useUI();
+  const { darkMode } = useUI();
   const { user } = useAuth();
 
   // Initialize notification manager when component mounts
   useEffect(() => {
     if (user) {
-      notificationManager.initSocket(user._id, isPageVisible);
+      notificationManager.initSocket(user._id);
       console.log('Notification manager initialized');
     }
 
@@ -23,11 +23,6 @@ export default function DashboardWrapper() {
       notificationManager.disconnect();
     };
   }, [user]);
-
-  // Update page visibility in notification manager
-  useEffect(() => {
-    notificationManager.updatePageVisibility(isPageVisible);
-  }, [isPageVisible]);
 
   return (
     <div className={`${darkMode ? 'dark' : ''}`}>

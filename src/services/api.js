@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL =  'https://taskassignmentbackend.onrender.com/api/v1';
 
+
+console.log("API URLaaa:", API_URL);
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
 });
+
+
 
 // Add token to requests
 api.interceptors.request.use((config) => {
@@ -16,15 +20,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Auth APIs
-console.log('API URL:', API_URL);
+
 export const authAPI = {
+ 
   login: (email, password) => api.post('/auth/login', { email, password }),
   setupPassword: (token, password, confirmPassword) =>
     api.post('/auth/setup-password', { token, password, confirmPassword }),
   getMe: () => api.get('/auth/me'),
 };
-
+console.log('Auth API:', authAPI);
 // Employee APIs
 export const employeeAPI = {
   getAll: (page = 1, limit = 10) => api.get(`/employees?page=${page}&limit=${limit}`),
