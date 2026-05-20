@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TaskCard from '../components/TaskCard';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function AdminDashboardPage() {
   const [tasks, setTasks] = useState([]);

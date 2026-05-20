@@ -8,7 +8,7 @@ import notificationManager from '../services/notificationManager';
 
 export default function DashboardWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { darkMode } = useUI();
+ 
   const { user } = useAuth();
 
   // Initialize notification manager when component mounts
@@ -25,7 +25,7 @@ export default function DashboardWrapper() {
   }, [user]);
 
   return (
-    <div className={`${darkMode ? 'dark' : ''}`}>
+    <div>
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
         <Sidebar isOpen={sidebarOpen} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className={`flex-1 ${sidebarOpen ? 'ml-64' : 'ml-20'} transition-all`}>

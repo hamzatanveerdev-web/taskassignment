@@ -10,7 +10,7 @@ export default function EmployeeDashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ pending: 0, started: 0, completed: 0 });
   const [loading, setLoading] = useState(false);
-  const { darkMode } = useUI();
+
 
   useEffect(() => {
     fetchDashboardData();

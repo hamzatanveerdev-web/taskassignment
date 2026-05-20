@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { UIProvider } from './context/UIContext';
-import { useAuth, useUI } from './context/hooks';
+import { useAuth } from './context/hooks';
 import { authAPI } from './services/api';
 import pushService from './services/pushService';
 

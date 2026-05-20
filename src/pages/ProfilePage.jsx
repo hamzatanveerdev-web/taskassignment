@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '../context/hooks';
 import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiBriefcase, FiCalendar } from 'react-icons/fi';

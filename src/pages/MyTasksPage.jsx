@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -13,7 +12,7 @@ export default function MyTasksPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
   const [search, setSearch] = useState('');
-  const { darkMode } = useUI();
+
 
   useEffect(() => {
     fetchTasks();

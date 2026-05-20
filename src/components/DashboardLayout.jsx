@@ -5,10 +5,10 @@ import Sidebar from './Sidebar';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { darkMode } = useUI();
+
 
   return (
-    <div className={`${darkMode ? 'dark' : ''}`}>
+    <div >
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
         <Sidebar isOpen={sidebarOpen} />
         <div className={`flex-1 ${sidebarOpen ? 'ml-64' : 'ml-20'} transition-all`}>
