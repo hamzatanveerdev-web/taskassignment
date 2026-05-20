@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+
+
+
+import React, { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -12,32 +15,48 @@ export default function MyTasksPage() {
   const [priorityFilter, setPriorityFilter] = useState('');
   const [search, setSearch] = useState('');
 
-
-  useEffect(() => {
-    fetchTasks();
-  }, [statusFilter, priorityFilter]);
-
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     setLoading(true);
+
     try {
-      const response = await taskAPI.getMyTasks(1, 50, statusFilter, priorityFilter);
+      const response = await taskAPI.getMyTasks(
+        1,
+        50,
+        statusFilter,
+        priorityFilter
+      );
+
       setTasks(response.data.tasks);
+
     } catch (error) {
       toast.error('Failed to load tasks');
+
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, priorityFilter]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
+
     if (!search) {
       fetchTasks();
       return;
     }
+
     try {
       const response = await taskAPI.search(search);
-      setTasks(response.data.tasks.filter((t) => t.assignedTo._id || t.createdBy._id));
+
+      setTasks(
+        response.data.tasks.filter(
+          (t) => t.assignedTo._id || t.createdBy._id
+        )
+      );
+
     } catch (error) {
       toast.error('Search failed');
     }
@@ -46,10 +65,12 @@ export default function MyTasksPage() {
   const handleStatusChange = async (taskId, newStatus) => {
     try {
       const response = await taskAPI.updateStatus(taskId, newStatus);
+
       if (response.data.success) {
         toast.success('Task status updated!');
         fetchTasks();
       }
+
     } catch (error) {
       toast.error('Failed to update task');
     }
@@ -58,7 +79,7 @@ export default function MyTasksPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <>
+       <>
       <div className="max-w-7xl mx-auto">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">My Tasks</h1>
 
