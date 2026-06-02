@@ -1,8 +1,8 @@
-import React from 'react';
+
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from '../components/Sidebar';
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useAuth, useUI } from '../context/hooks';
 import { notificationAPI } from '../services/api';
 import notificationManager from '../services/notificationManager';
@@ -14,23 +14,22 @@ export default function DashboardWrapper() {
   const { setUnreadCount } = useUI();
 
   // Fetch initial unread count
-  useEffect(() => {
-    if (user) {
-      const fetchUnreadCount = async () => {
-    try {
-      const response = await notificationAPI.getUnreadCount();
-      if (response.data.success) {
-        setUnreadCount(response.data.unreadCount);
+useEffect(() => {
+  if (user) {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await notificationAPI.getUnreadCount();
+        if (response.data.success) {
+          setUnreadCount(response.data.unreadCount);
+        }
+      } catch (error) {
+        console.error('Error fetching unread count:', error);
       }
-    } catch (error) {
-      console.error('Error fetching unread count:', error);
-    }
-  };
+    };
 
-    }
-  }, [user]);
-
- 
+    fetchUnreadCount();
+  }
+}, [user, setUnreadCount]);
   // Initialize notification manager when component mounts
   useEffect(() => {
     if (user) {
