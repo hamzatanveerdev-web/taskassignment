@@ -1,6 +1,6 @@
 // sw.js
 
-const CACHE_NAME = "task-management-v2";
+const CACHE_NAME = "task-management-v3";
 
 // Install Service Worker
 self.addEventListener("install", (event) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { taskAPI, employeeAPI } from '../services/api';
+import { ButtonSpinner } from '../components/LoadingSpinner';
 
 
 export default function AssignTaskPage() {
@@ -144,9 +145,16 @@ export default function AssignTaskPage() {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={loading}
-                    className="w-full btn-primary py-3 font-semibold disabled:opacity-50"
+                    className="w-full btn-primary py-3 font-semibold flex items-center justify-center gap-2"
                   >
-                    {loading ? 'Assigning...' : 'Assign Task'}
+                    {loading ? (
+                      <>
+                        <ButtonSpinner size="sm" />
+                        Assigning...
+                      </>
+                    ) : (
+                      'Assign Task'
+                    )}
                   </motion.button>
                 </form>
               </motion.div>

@@ -3,26 +3,53 @@ import { Outlet } from 'react-router-dom';
 
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/hooks';
+import { useAuth, useUI } from '../context/hooks';
+import { notificationAPI } from '../services/api';
 import notificationManager from '../services/notificationManager';
 
 export default function DashboardWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
  
   const { user } = useAuth();
+  const { setUnreadCount } = useUI();
+
+  // Fetch initial unread count
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await notificationAPI.getUnreadCount();
+      if (response.data.success) {
+        setUnreadCount(response.data.unreadCount);
+      }
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
 
   // Initialize notification manager when component mounts
   useEffect(() => {
     if (user) {
       notificationManager.initSocket(user._id);
-      console.log('Notification manager initialized');
-    }
+      
+      // Register handler to update unread count when new notifications arrive
+      const unsubscribe = notificationManager.onNotification((data, type) => {
+        setUnreadCount((prev) => prev + 1);
+      });
 
-    return () => {
-      // Cleanup on unmount
-      notificationManager.disconnect();
-    };
-  }, [user]);
+      console.log('Notification manager initialized');
+
+      return () => {
+        unsubscribe();
+        // Cleanup on unmount
+        notificationManager.disconnect();
+      };
+    }
+  }, [user, setUnreadCount]);
 
   return (
     <div>

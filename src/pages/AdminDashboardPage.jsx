@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card">
                     <p className="text-gray-600 text-sm">Total Tasks</p>
-                    <p className="text-3xl font-bold text-blue-600">{analytics.totalTasks}</p>
+                    <p className="text-3xl font-bold text-[#3BC0E1]">{analytics.totalTasks}</p>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="card">
                     <p className="text-gray-600 text-sm">Pending</p>
@@ -82,7 +82,7 @@ export default function AdminDashboardPage() {
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card">
                     <p className="text-gray-600 text-sm">In Progress</p>
-                    <p className="text-3xl font-bold text-blue-600">{analytics.startedTasks}</p>
+                    <p className="text-3xl font-bold text-[#3BC0E1]">{analytics.startedTasks}</p>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
                     <p className="text-gray-600 text-sm">Completed</p>
@@ -100,7 +100,7 @@ export default function AdminDashboardPage() {
                       <XAxis dataKey="name" />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#3b82f6" />
+                      <Bar dataKey="value" fill="#3BC0E1" />
                     </BarChart>
                   </ResponsiveContainer>
                 </motion.div>

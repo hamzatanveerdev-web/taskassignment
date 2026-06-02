@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { authAPI } from '../services/api';
 import { useAuth } from '../context/hooks';
+import { ButtonSpinner } from '../components/LoadingSpinner';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -37,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#3BC0E1] to-[#2FA8C5] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -45,7 +46,7 @@ export default function LoginPage() {
       >
         <div className="card bg-white shadow-2xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-blue-600 mb-2">TaskPro</h1>
+            <h1 className="text-3xl font-bold text-[#3BC0E1] mb-2">TaskPro</h1>
             <p className="text-gray-600">Task Management System</p>
           </div>
 
@@ -59,7 +60,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="input-field"
+                className="input-field focus:ring-[#3BC0E1]"
                 placeholder="you@example.com"
               />
             </div>
@@ -73,7 +74,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="input-field"
+                className="input-field focus:ring-[#3BC0E1]"
                 placeholder="••••••••"
               />
             </div>
@@ -83,9 +84,16 @@ export default function LoginPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 font-semibold disabled:opacity-50"
+              className="w-full btn-primary py-3 font-semibold flex items-center justify-center gap-2"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? (
+                <>
+                  <ButtonSpinner size="sm" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
             </motion.button>
           </form>
 

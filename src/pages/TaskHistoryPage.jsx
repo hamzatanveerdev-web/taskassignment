@@ -17,6 +17,11 @@ export default function TaskHistoryPage() {
     try {
       const response = await taskAPI.getAll(1, 100, 'completed');
       setTasks(response.data.tasks);
+      console.log('Completed Tasks:', response.data.tasks);
+      // Check the structure of assignedTo
+      if (response.data.tasks.length > 0) {
+        console.log('First task assignedTo:', response.data.tasks[0].assignedTo);
+      }
     } catch (error) {
       toast.error('Failed to load task history');
     } finally {
@@ -53,15 +58,22 @@ export default function TaskHistoryPage() {
                             </div>
                             <div>
                               <p className="text-gray-600">Assigned To</p>
-                              <p className="font-medium text-gray-800">{task.assignedTo.fullName}</p>
+                              <p className="font-medium text-gray-800">
+                                {task.assignedTo?.fullName || task.assignedTo?.email || 'Unassigned'}
+                              </p>
+                              {task.assignedTo?.email && (
+                                <p className="text-xs text-gray-500">{task.assignedTo.email}</p>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-gray-600">Created By</p>
+                              <p className="font-medium text-gray-800">
+                                {task.createdBy?.fullName || task.createdBy?.email || 'N/A'}
+                              </p>
                             </div>
                             <div>
                               <p className="text-gray-600">Completed</p>
                               <p className="font-medium text-green-600">{new Date(task.completedDate).toLocaleDateString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Time Completed</p>
-                              <p className="font-medium text-gray-800">{task.completedTime}</p>
                             </div>
                           </div>
                         </div>

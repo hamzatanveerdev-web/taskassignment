@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { employeeAPI } from '../services/api';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner, { ButtonSpinner } from '../components/LoadingSpinner';
 import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -45,6 +46,7 @@ export default function EmployeesPage() {
 
   const handleAddEmployee = async (e) => {
     e.preventDefault();
+    setActionLoading(true);
     try {
       const response = await employeeAPI.add(formData.fullName, formData.email, formData.role);
       if (response.data.success) {
@@ -55,6 +57,8 @@ export default function EmployeesPage() {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to add employee');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -65,6 +69,7 @@ export default function EmployeesPage() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setActionLoading(true);
     try {
       const response = await employeeAPI.update(editingId, formData);
       if (response.data.success) {
@@ -75,6 +80,8 @@ export default function EmployeesPage() {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update employee');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -109,6 +116,7 @@ export default function EmployeesPage() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowAddForm(!showAddForm)}
+                    disabled={actionLoading}
                     className="btn-primary flex items-center gap-2"
                   >
                     <FiPlus /> Add Employee
@@ -158,8 +166,15 @@ export default function EmployeesPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button type="submit" className="btn-primary">
-                        {editingId ? 'Update Employee' : 'Add Employee'}
+                      <button type="submit" disabled={actionLoading} className="btn-primary flex items-center justify-center gap-2">
+                        {actionLoading ? (
+                          <>
+                            <ButtonSpinner size="sm" />
+                            {editingId ? 'Updating...' : 'Adding...'}
+                          </>
+                        ) : (
+                          editingId ? 'Update Employee' : 'Add Employee'
+                        )}
                       </button>
                       <button
                         type="button"
@@ -191,9 +206,9 @@ export default function EmployeesPage() {
                       className="input-field pl-10"
                     />
                   </div>
-                  <button type="submit" className="btn-primary">
+                  <motion.button type="submit" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn-primary">
                     Search
-                  </button>
+                  </motion.button>
                 </form>
               </div>
 
@@ -208,14 +223,14 @@ export default function EmployeesPage() {
                     <div>
                       <h3 className="font-semibold text-gray-900">{employee.fullName}</h3>
                       <p className="text-sm text-gray-600">{employee.email}</p>
-                      <span className="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                      <span className="inline-block mt-2 px-2 py-1 bg-[#3BC0E1]/20 text-[#3BC0E1] text-xs rounded font-medium">
                         {employee.role.toUpperCase()}
                       </span>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(employee)}
-                        className="p-2 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors"
                       >
                         <FiEdit2 size={18} />
                       </button>

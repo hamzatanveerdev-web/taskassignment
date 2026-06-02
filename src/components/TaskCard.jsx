@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { ButtonSpinner } from './LoadingSpinner';
 
 
 export default function TaskCard({ task, onStatusChange, onEdit = () => {}, onDelete = () => {}, isEmployee = false }) {
+  const [loadingStatus, setLoadingStatus] = useState(false);
+
+  const handleStatusClick = async () => {
+    setLoadingStatus(true);
+    try {
+      await onStatusChange(task._id, task.status === 'pending' ? 'started' : 'completed');
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
   const getPriorityColor = (priority) => {
     const colors = {
       high: 'priority-high',
@@ -64,12 +75,22 @@ export default function TaskCard({ task, onStatusChange, onEdit = () => {}, onDe
         {isEmployee && (
           <div className="flex gap-2">
             {task.status !== 'completed' && (
-              <button
-                onClick={() => onStatusChange(task._id, task.status === 'pending' ? 'started' : 'completed')}
-                className="flex-1 btn-primary text-sm"
+              <motion.button
+                onClick={handleStatusClick}
+                disabled={loadingStatus}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 btn-primary text-sm flex items-center justify-center gap-2"
               >
-                {task.status === 'pending' ? 'Start Task' : 'Complete Task'}
-              </button>
+                {loadingStatus ? (
+                  <>
+                    <ButtonSpinner size="sm" />
+                    Updating...
+                  </>
+                ) : (
+                  task.status === 'pending' ? 'Start Task' : 'Complete Task'
+                )}
+              </motion.button>
             )}
           </div>
         )}

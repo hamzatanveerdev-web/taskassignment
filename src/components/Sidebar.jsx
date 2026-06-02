@@ -59,9 +59,9 @@ export default function Sidebar({ isOpen, onMenuClick }) {
           >
             <FiMenu size={24} />
           </button>
-          {isOpen && <h2 className="text-lg font-bold text-blue-400">TaskPro</h2>}
+          {isOpen && <h2 className="text-lg font-bold text-[#3BC0E1]">Brainscraft</h2>}
         </div>
-        {!isOpen && <div className="text-sm font-bold text-blue-400 text-center w-full">TP</div>}
+       
       </div>
       <div className="p-4 space-y-2 flex-1">
         {menuItems.map((item) => {
@@ -73,7 +73,7 @@ export default function Sidebar({ isOpen, onMenuClick }) {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive ? 'bg-blue-600' : 'hover:bg-gray-800'
+                isActive ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]' : 'hover:bg-gray-800 text-white'
               }`}
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
