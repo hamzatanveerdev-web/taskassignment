@@ -16,11 +16,7 @@ export default function DashboardWrapper() {
   // Fetch initial unread count
   useEffect(() => {
     if (user) {
-      fetchUnreadCount();
-    }
-  }, [user]);
-
-  const fetchUnreadCount = async () => {
+      const fetchUnreadCount = async () => {
     try {
       const response = await notificationAPI.getUnreadCount();
       if (response.data.success) {
@@ -31,6 +27,10 @@ export default function DashboardWrapper() {
     }
   };
 
+    }
+  }, [user]);
+
+ 
   // Initialize notification manager when component mounts
   useEffect(() => {
     if (user) {
