@@ -22,12 +22,7 @@ export default function Header({ onMenuClick }) {
     >
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
-          <button
-            onClick={onMenuClick}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <FiMenu size={24} />
-          </button>
+        
           <h1 className="text-xl font-bold text-[#3BC0E1]">TaskPro</h1>
         </div>
 

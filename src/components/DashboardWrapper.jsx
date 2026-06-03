@@ -2,6 +2,7 @@
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 import React,{ useState, useEffect } from 'react';
 import { useAuth, useUI } from '../context/hooks';
 import { notificationAPI } from '../services/api';
@@ -55,6 +56,7 @@ useEffect(() => {
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
         <Sidebar isOpen={sidebarOpen} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className={`flex-1 ${sidebarOpen ? 'ml-64' : 'ml-20'} transition-all`}>
+          <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
           <main className="p-8">
             <div className="max-w-7xl mx-auto">
               <Outlet />
