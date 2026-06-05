@@ -1,6 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 import { FiMenu, FiBell, FiLogOut } from 'react-icons/fi';
+=======
+import {  FiBell, FiLogOut } from 'react-icons/fi';
+>>>>>>> 576c4350a8ff5c04b16fa347ba1e668502222dca
 import { useAuth, useUI } from '../context/hooks';
 import { useNavigate } from 'react-router-dom';
 
