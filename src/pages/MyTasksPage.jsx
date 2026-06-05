@@ -79,80 +79,78 @@ export default function MyTasksPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-       <>
-      <div className="max-w-7xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">My Tasks</h1>
+    <>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">My Tasks</h1>
 
-              <div className="card mb-8">
-                <div className="space-y-4">
-                  <form onSubmit={handleSearch} className="flex gap-2">
-                    <div className="flex-1 relative">
-                      <FiSearch className="absolute left-3 top-3 text-gray-400" />
-                      <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search tasks..."
-                        className="input-field pl-10"
-                      />
-                    </div>
-                    <button type="submit" className="btn-primary">
-                      Search
-                    </button>
-                  </form>
+      <div className="card mb-6 md:mb-8">
+        <div className="space-y-4">
+          <form onSubmit={handleSearch} className="flex gap-2 flex-col md:flex-row">
+            <div className="flex-1 relative">
+              <FiSearch className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search tasks..."
+                className="input-field pl-10 w-full"
+              />
+            </div>
+            <button type="submit" className="btn-primary w-full md:w-auto">
+              Search
+            </button>
+          </form>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <FiFilter size={16} /> Filter by Status
-                      </label>
-                      <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="input-field"
-                      >
-                        <option value="">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="started">Started</option>
-                        <option value="completed">Completed</option>
-                      </select>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            <div>
+              <label className="block text-xs md:text-sm font-medium mb-2 flex items-center gap-2">
+                <FiFilter size={16} /> Filter by Status
+              </label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="input-field text-sm"
+              >
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="started">Started</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
 
-                    <div>
-                      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <FiFilter size={16} /> Filter by Priority
-                      </label>
-                      <select
-                        value={priorityFilter}
-                        onChange={(e) => setPriorityFilter(e.target.value)}
-                        className="input-field"
-                      >
-                        <option value="">All Priorities</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium mb-2 flex items-center gap-2">
+                <FiFilter size={16} /> Filter by Priority
+              </label>
+              <select
+                value={priorityFilter}
+                onChange={(e) => setPriorityFilter(e.target.value)}
+                className="input-field text-sm"
+              >
+                <option value="">All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div className="grid gap-4">
-                {tasks.length > 0 ? (
-                  tasks.map((task) => (
-                    <TaskCard
-                      key={task._id}
-                      task={task}
-                      isEmployee={true}
-                      onStatusChange={handleStatusChange}
-                    />
-                  ))
-                ) : (
-                  <div className="text-center py-12">
-                    <p className="text-gray-600 dark:text-gray-400 text-lg">No tasks found</p>
-                  </div>
-                )}
-              </div>
+      <div className="grid gap-4">
+        {tasks.length > 0 ? (
+          tasks.map((task) => (
+            <TaskCard
+              key={task._id}
+              task={task}
+              isEmployee={true}
+              onStatusChange={handleStatusChange}
+            />
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg">No tasks found</p>
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiMenu, FiX, FiBell, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiBell, FiLogOut } from 'react-icons/fi';
 import { useAuth, useUI } from '../context/hooks';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,13 +20,21 @@ export default function Header({ onMenuClick }) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <div className="flex items-center justify-between px-6 py-4">
+      <div className="flex items-center justify-between px-4 md:px-6 py-4">
         <div className="flex items-center gap-4">
-        
-          <h1 className="text-xl font-bold text-[#3BC0E1]">TaskPro</h1>
+          <motion.button
+            onClick={onMenuClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3BC0E1]"
+            title="Toggle Menu"
+          >
+            <FiMenu size={24} className="text-gray-700" />
+          </motion.button>
+          <h1 className="text-lg md:text-xl font-bold text-[#3BC0E1]">TaskPro</h1>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -40,7 +48,7 @@ export default function Header({ onMenuClick }) {
                 key={unreadCount}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
+                className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center shadow-lg"
               >
                 {unreadCount > 99 ? '99+' : unreadCount}
               </motion.span>

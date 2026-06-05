@@ -54,111 +54,109 @@ export default function AssignTaskPage() {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 mb-8">Assign New Task</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">Assign New Task</h1>
 
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="card"
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="card max-w-4xl"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Task Title
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
+              className="input-field text-sm"
+              placeholder="Enter task title"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Description
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+              rows="5"
+              className="input-field text-sm"
+              placeholder="Enter task description"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Priority
+              </label>
+              <select
+                value={formData.priority}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                className="input-field text-sm"
               >
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Task Title
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      required
-                      className="input-field"
-                      placeholder="Enter task title"
-                    />
-                  </div>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description
-                    </label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      required
-                      rows="5"
-                      className="input-field"
-                      placeholder="Enter task description"
-                    />
-                  </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Due Date
+              </label>
+              <input
+                type="date"
+                value={formData.dueDate}
+                onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                required
+                className="input-field text-sm"
+              />
+            </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Priority
-                      </label>
-                      <select
-                        value={formData.priority}
-                        onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                        className="input-field"
-                      >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                      </select>
-                    </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Assign To
+              </label>
+              <select
+                value={formData.assignedTo}
+                onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
+                required
+                className="input-field text-sm"
+              >
+                <option value="">Select employee</option>
+                {employees.map((emp) => (
+                  <option key={emp._id} value={emp._id}>
+                    {emp.fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Due Date
-                      </label>
-                      <input
-                        type="date"
-                        value={formData.dueDate}
-                        onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                        required
-                        className="input-field"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Assign To
-                      </label>
-                      <select
-                        value={formData.assignedTo}
-                        onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
-                        required
-                        className="input-field"
-                      >
-                        <option value="">Select employee</option>
-                        {employees.map((emp) => (
-                          <option key={emp._id} value={emp._id}>
-                            {emp.fullName}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    disabled={loading}
-                    className="w-full btn-primary py-3 font-semibold flex items-center justify-center gap-2"
-                  >
-                    {loading ? (
-                      <>
-                        <ButtonSpinner size="sm" />
-                        Assigning...
-                      </>
-                    ) : (
-                      'Assign Task'
-                    )}
-                  </motion.button>
-                </form>
-              </motion.div>
-      </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading}
+            className="w-full btn-primary py-2 md:py-3 font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
+          >
+            {loading ? (
+              <>
+                <ButtonSpinner size="sm" />
+                Assigning...
+              </>
+            ) : (
+              'Assign Task'
+            )}
+          </motion.button>
+        </form>
+      </motion.div>
     </>
   );
 }

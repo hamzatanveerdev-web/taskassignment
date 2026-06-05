@@ -83,91 +83,89 @@ export default function NotificationsPage() {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto">
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-                <motion.button 
-                  onClick={handleMarkAllAsRead} 
-                  disabled={markAllLoading}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="btn-secondary text-sm flex items-center justify-center gap-2"
-                >
-                  {markAllLoading ? (
-                    <>
-                      <ButtonSpinner size="sm" />
-                      Processing...
-                    </>
-                  ) : (
-                    'Mark All as Read'
-                  )}
-                </motion.button>
-              </div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+        <motion.button 
+          onClick={handleMarkAllAsRead} 
+          disabled={markAllLoading}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="btn-secondary text-xs md:text-sm flex items-center justify-center gap-2 w-full md:w-auto"
+        >
+          {markAllLoading ? (
+            <>
+              <ButtonSpinner size="sm" />
+              Processing...
+            </>
+          ) : (
+            'Mark All as Read'
+          )}
+        </motion.button>
+      </div>
 
-              <div className="space-y-3">
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <motion.div
-                      key={notification._id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className={`card ${
-                        !notification.isRead ? 'border-l-4 border-[#3BC0E1]' : ''
-                      }`}
+      <div className="space-y-2 md:space-y-3">
+        {notifications.length > 0 ? (
+          notifications.map((notification) => (
+            <motion.div
+              key={notification._id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className={`card ${
+                !notification.isRead ? 'border-l-4 border-[#3BC0E1]' : ''
+              }`}
+            >
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base break-words">{notification.title}</h3>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{notification.message}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                    {new Date(notification.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0 w-full md:w-auto">
+                  {!notification.isRead && (
+                    <motion.button
+                      onClick={() => handleMarkAsRead(notification._id)}
+                      disabled={actionLoading === notification._id}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="flex-1 md:flex-none p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors disabled:opacity-50"
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">{notification.title}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                          <p className="text-xs text-gray-500 mt-2">
-                            {new Date(notification.createdAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </p>
-                        </div>
-                        <div className="flex gap-2 ml-4">
-                          {!notification.isRead && (
-                            <motion.button
-                              onClick={() => handleMarkAsRead(notification._id)}
-                              disabled={actionLoading === notification._id}
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              className="p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors disabled:opacity-50"
-                            >
-                              {actionLoading === notification._id ? (
-                                <ButtonSpinner size="sm" />
-                              ) : (
-                                <FiCheck size={18} />
-                              )}
-                            </motion.button>
-                          )}
-                          <motion.button
-                            onClick={() => handleDelete(notification._id)}
-                            disabled={actionLoading === notification._id}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors disabled:opacity-50"
-                          >
-                            {actionLoading === notification._id ? (
-                              <ButtonSpinner size="sm" />
-                            ) : (
-                              <FiTrash2 size={18} />
-                            )}
-                          </motion.button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="text-center py-12">
-                    <p className="text-gray-600 text-lg">No notifications</p>
-                  </div>
-                )}
+                      {actionLoading === notification._id ? (
+                        <ButtonSpinner size="sm" />
+                      ) : (
+                        <FiCheck size={18} />
+                      )}
+                    </motion.button>
+                  )}
+                  <motion.button
+                    onClick={() => handleDelete(notification._id)}
+                    disabled={actionLoading === notification._id}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="flex-1 md:flex-none p-2 hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {actionLoading === notification._id ? (
+                      <ButtonSpinner size="sm" />
+                    ) : (
+                      <FiTrash2 size={18} />
+                    )}
+                  </motion.button>
+                </div>
               </div>
+            </motion.div>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg">No notifications</p>
+          </div>
+        )}
       </div>
     </>
   );

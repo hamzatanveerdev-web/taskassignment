@@ -39,25 +39,25 @@ export default function TaskCard({ task, onStatusChange, onEdit = () => {}, onDe
       className="card"
     >
       <div className="space-y-4">
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{task.title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-white break-words">{task.title}</h3>
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
               {task.description}
             </p>
           </div>
         </div>
 
         <div className="flex gap-2 flex-wrap">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+          <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
             {task.priority.toUpperCase()}
           </span>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+          <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
             {task.status.toUpperCase()}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 text-xs md:text-sm">
           <div>
             <p className="text-gray-600 dark:text-gray-400">Due Date</p>
             <p className="font-medium text-gray-800 dark:text-white">
@@ -73,14 +73,14 @@ export default function TaskCard({ task, onStatusChange, onEdit = () => {}, onDe
         </div>
 
         {isEmployee && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-col md:flex-row">
             {task.status !== 'completed' && (
               <motion.button
                 onClick={handleStatusClick}
                 disabled={loadingStatus}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex-1 btn-primary text-sm flex items-center justify-center gap-2"
+                className="w-full btn-primary text-xs md:text-sm flex items-center justify-center gap-2 py-2 md:py-2"
               >
                 {loadingStatus ? (
                   <>
@@ -96,11 +96,11 @@ export default function TaskCard({ task, onStatusChange, onEdit = () => {}, onDe
         )}
 
         {!isEmployee && (
-          <div className="flex gap-2">
-            <button onClick={() => onEdit(task)} className="flex-1 btn-secondary text-sm">
+          <div className="flex gap-2 flex-col md:flex-row">
+            <button onClick={() => onEdit(task)} className="w-full md:flex-1 btn-secondary text-xs md:text-sm py-2 md:py-2">
               Edit
             </button>
-            <button onClick={() => onDelete(task._id)} className="flex-1 btn-danger text-sm">
+            <button onClick={() => onDelete(task._id)} className="w-full md:flex-1 btn-danger text-xs md:text-sm py-2 md:py-2">
               Delete
             </button>
           </div>

@@ -10,11 +10,10 @@ import {
   FiSettings,
   FiUser,
   FiBarChart2,
-  FiMenu,
   FiLogOut,
 } from 'react-icons/fi';
 
-export default function Sidebar({ isOpen, onMenuClick }) {
+export default function Sidebar({ isOpen, isMobile, onClose }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,25 +42,39 @@ export default function Sidebar({ isOpen, onMenuClick }) {
     navigate('/login');
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    onClose();
+  };
+
   return (
     <motion.aside
-      className={`${
-        isOpen ? 'w-64' : 'w-20'
-      } bg-gray-900 text-white fixed left-0 top-0 h-screen overflow-y-auto transition-all duration-300 z-50 flex flex-col`}
+      className={`bg-gray-900 text-white fixed left-0 top-0 h-screen overflow-y-auto transition-all duration-300 z-40 flex flex-col ${
+        isMobile
+          ? 'w-64'
+          : `${
+              isOpen ? 'w-64' : 'w-20'
+            } md:flex`
+      }`}
       initial={false}
-      animate={{ width: isOpen ? 256 : 80 }}
+      animate={{
+        width: isMobile ? 256 : isOpen ? 256 : 80,
+        x: isMobile && !isOpen ? -256 : 0,
+      }}
+      transition={{ duration: 0.3 }}
     >
       <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-3 flex-1">
-          <button
-            onClick={onMenuClick}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <FiMenu size={24} />
-          </button>
-          {isOpen && <h2 className="text-lg font-bold text-[#3BC0E1]">Brainscraft</h2>}
+          {isMobile ? (
+            <h2 className="text-lg font-bold text-[#3BC0E1] flex-1">Brainscraft</h2>
+          ) : (
+            <>
+              <h2 className={`text-lg font-bold text-[#3BC0E1] ${!isOpen ? 'hidden' : ''}`}>
+                Brainscraft
+              </h2>
+            </>
+          )}
         </div>
-       
       </div>
       <div className="p-4 space-y-2 flex-1">
         {menuItems.map((item) => {
@@ -71,7 +84,7 @@ export default function Sidebar({ isOpen, onMenuClick }) {
           return (
             <motion.button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={() => handleNavigation(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]' : 'hover:bg-gray-800 text-white'
               }`}
@@ -79,7 +92,7 @@ export default function Sidebar({ isOpen, onMenuClick }) {
               whileTap={{ scale: 0.95 }}
             >
               <Icon size={20} className="flex-shrink-0" />
-              {isOpen && <span>{item.label}</span>}
+              {isMobile || isOpen ? <span>{item.label}</span> : null}
             </motion.button>
           );
         })}
@@ -87,7 +100,7 @@ export default function Sidebar({ isOpen, onMenuClick }) {
 
       {/* User Info & Logout Section */}
       <div className="border-t border-gray-800 p-4 space-y-2">
-        {isOpen && user && (
+        {(isMobile || isOpen) && user && (
           <div className="px-4 py-2 mb-2 bg-gray-800 rounded-lg">
             <p className="text-sm font-semibold text-gray-100">{user.fullName}</p>
             <p className="text-xs text-gray-400 capitalize">{user.role}</p>
@@ -100,7 +113,7 @@ export default function Sidebar({ isOpen, onMenuClick }) {
           whileTap={{ scale: 0.95 }}
         >
           <FiLogOut size={20} className="flex-shrink-0" />
-          {isOpen && <span>Logout</span>}
+          {isMobile || isOpen ? <span>Logout</span> : null}
         </motion.button>
       </div>
     </motion.aside>

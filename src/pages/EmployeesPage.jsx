@@ -108,149 +108,147 @@ export default function EmployeesPage() {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
-                {!editingId && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowAddForm(!showAddForm)}
-                    disabled={actionLoading}
-                    className="btn-primary flex items-center gap-2"
-                  >
-                    <FiPlus /> Add Employee
-                  </motion.button>
-                )}
-              </div>
-
-              {(showAddForm || editingId) && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="card mb-8"
-                >
-                  <h2 className="text-xl font-semibold mb-4">{editingId ? 'Edit Employee' : 'Add New Employee'}</h2>
-                  <form onSubmit={editingId ? handleUpdate : handleAddEmployee} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Full Name</label>
-                        <input
-                          type="text"
-                          value={formData.fullName}
-                          onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          required
-                          className="input-field"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Role</label>
-                        <select
-                          value={formData.role}
-                          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                          className="input-field"
-                        >
-                          <option value="employee">Employee</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button type="submit" disabled={actionLoading} className="btn-primary flex items-center justify-center gap-2">
-                        {actionLoading ? (
-                          <>
-                            <ButtonSpinner size="sm" />
-                            {editingId ? 'Updating...' : 'Adding...'}
-                          </>
-                        ) : (
-                          editingId ? 'Update Employee' : 'Add Employee'
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (editingId) {
-                            handleCancelEdit();
-                          } else {
-                            setShowAddForm(false);
-                          }
-                        }}
-                        className="btn-secondary"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                </motion.div>
-              )}
-
-              <div className="mb-6">
-                <form onSubmit={handleSearch} className="flex gap-2">
-                  <div className="flex-1 relative">
-                    <FiSearch className="absolute left-3 top-3 text-gray-400" />
-                    <input
-                      type="text"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search employees..."
-                      className="input-field pl-10"
-                    />
-                  </div>
-                  <motion.button type="submit" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn-primary">
-                    Search
-                  </motion.button>
-                </form>
-              </div>
-
-              <div className="grid gap-4">
-                {employees.map((employee) => (
-                  <motion.div
-                    key={employee._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="card flex items-center justify-between"
-                  >
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{employee.fullName}</h3>
-                      <p className="text-sm text-gray-600">{employee.email}</p>
-                      <span className="inline-block mt-2 px-2 py-1 bg-[#3BC0E1]/20 text-[#3BC0E1] text-xs rounded font-medium">
-                        {employee.role.toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(employee)}
-                        className="p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors"
-                      >
-                        <FiEdit2 size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(employee._id)}
-                        className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
-                      >
-                        <FiTrash2 size={18} />
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {employees.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 text-lg">No employees found</p>
-                </div>
-              )}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Employees</h1>
+        {!editingId && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAddForm(!showAddForm)}
+            disabled={actionLoading}
+            className="btn-primary flex items-center gap-2 w-full md:w-auto justify-center"
+          >
+            <FiPlus /> Add Employee
+          </motion.button>
+        )}
       </div>
+
+      {(showAddForm || editingId) && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card mb-6 md:mb-8"
+        >
+          <h2 className="text-lg md:text-xl font-semibold mb-4 dark:text-white">{editingId ? 'Edit Employee' : 'Add New Employee'}</h2>
+          <form onSubmit={editingId ? handleUpdate : handleAddEmployee} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+              <div>
+                <label className="block text-xs md:text-sm font-medium mb-1 dark:text-gray-200">Full Name</label>
+                <input
+                  type="text"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  required
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs md:text-sm font-medium mb-1 dark:text-gray-200">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs md:text-sm font-medium mb-1 dark:text-gray-200">Role</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  className="input-field text-sm"
+                >
+                  <option value="employee">Employee</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-col md:flex-row">
+              <button type="submit" disabled={actionLoading} className="btn-primary flex items-center justify-center gap-2 flex-1 md:flex-none">
+                {actionLoading ? (
+                  <>
+                    <ButtonSpinner size="sm" />
+                    {editingId ? 'Updating...' : 'Adding...'}
+                  </>
+                ) : (
+                  editingId ? 'Update Employee' : 'Add Employee'
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (editingId) {
+                    handleCancelEdit();
+                  } else {
+                    setShowAddForm(false);
+                  }
+                }}
+                className="btn-secondary flex-1 md:flex-none"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </motion.div>
+      )}
+
+      <div className="mb-6">
+        <form onSubmit={handleSearch} className="flex gap-2 flex-col md:flex-row">
+          <div className="flex-1 relative">
+            <FiSearch className="absolute left-3 top-3 text-gray-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search employees..."
+              className="input-field pl-10 w-full text-sm"
+            />
+          </div>
+          <motion.button type="submit" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn-primary w-full md:w-auto">
+            Search
+          </motion.button>
+        </form>
+      </div>
+
+      <div className="grid gap-3 md:gap-4">
+        {employees.map((employee) => (
+          <motion.div
+            key={employee._id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          >
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-gray-900 dark:text-white break-words">{employee.fullName}</h3>
+              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 break-all">{employee.email}</p>
+              <span className="inline-block mt-2 px-2 py-1 bg-[#3BC0E1]/20 text-[#3BC0E1] text-xs rounded font-medium">
+                {employee.role.toUpperCase()}
+              </span>
+            </div>
+            <div className="flex gap-2 w-full md:w-auto">
+              <button
+                onClick={() => handleEdit(employee)}
+                className="flex-1 md:flex-none p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors"
+              >
+                <FiEdit2 size={18} />
+              </button>
+              <button
+                onClick={() => handleDelete(employee._id)}
+                className="flex-1 md:flex-none p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+              >
+                <FiTrash2 size={18} />
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {employees.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg">No employees found</p>
+        </div>
+      )}
     </>
   );
 }
