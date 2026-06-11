@@ -21,8 +21,8 @@ Modern task management platform built with the MERN Stack that helps teams assig
 **Tools:** Git, GitHub, JWT, Axios
 
 **ScreenShots**
-<img src="./Screenshots/dashboard.png" width="100%" />
-<img src="./Screenshots/employeeadding.png" width="100%" />
+<img src="./Screenshots/dashboard.png" width="80%" />
+<img src="./Screenshots/employeeadding.png" width="60%" />
 ### 🚀 Run Locally
 
 ```bash
