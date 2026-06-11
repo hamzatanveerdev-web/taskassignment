@@ -66,11 +66,11 @@ export default function Sidebar({ isOpen, isMobile, onClose }) {
       <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-3 flex-1">
           {isMobile ? (
-            <h2 className="text-lg font-bold text-[#3BC0E1] flex-1">Brainscraft</h2>
+            <h2 className="text-lg font-bold text-[#3BC0E1] flex-1">CODESTACK</h2>
           ) : (
             <>
               <h2 className={`text-lg font-bold text-[#3BC0E1] ${!isOpen ? 'hidden' : ''}`}>
-                Brainscraft
+                CODESTACK
               </h2>
             </>
           )}
