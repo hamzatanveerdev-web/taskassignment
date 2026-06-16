@@ -5,14 +5,14 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import React,{ useState, useEffect } from 'react';
 import { useAuth, useUI } from '../context/hooks';
-import { notificationAPI } from '../services/api';
+import { notificationAPI, getUserId } from '../services/api';
 import notificationManager from '../services/notificationManager';
 
 export default function DashboardWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
  
-  const { user } = useAuth();
+  const { user, userId } = useAuth();
   const { setUnreadCount } = useUI();
 
   // Check if mobile on mount and resize
@@ -58,7 +58,7 @@ useEffect(() => {
   // Initialize notification manager when component mounts
   useEffect(() => {
     if (user) {
-      notificationManager.initSocket(user._id);
+      notificationManager.initSocket(userId || user?._id || getUserId());
       
       // Register handler to update unread count when new notifications arrive
       const unsubscribe = notificationManager.onNotification((data, type) => {
@@ -73,7 +73,7 @@ useEffect(() => {
         notificationManager.disconnect();
       };
     }
-  }, [user, setUnreadCount]);
+  }, [user, userId, setUnreadCount]);
 
   return (
     <div>
