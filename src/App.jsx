@@ -57,6 +57,7 @@ function AppContent() {
         })
         .catch(() => {
           localStorage.removeItem('token');
+          localStorage.removeItem('userId');
         })
         .finally(() => {
           setLoading(false);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { attendanceAPI } from "../services/api";
+import { attendanceAPI, getUserId } from "../services/api";
 import { useAuth } from "../context/hooks";
 import toast from "react-hot-toast";
 
@@ -9,7 +9,8 @@ const AttendanceCard = () => {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
-    if (!user?._id) {
+    const userId = user?._id || getUserId();
+    if (!userId) {
       toast.error("User ID not found");
       return;
     }
@@ -18,11 +19,11 @@ const AttendanceCard = () => {
 
     try {
       if (status === "check_in") {
-        await attendanceAPI.checkIn(user._id);
+        await attendanceAPI.checkIn(userId);
         toast.success("Checked in successfully");
         setStatus("check_out");
       } else {
-        await attendanceAPI.checkOut(user._id);
+        await attendanceAPI.checkOut(userId);
         toast.success("Checked out successfully");
         setStatus("check_in");
       }

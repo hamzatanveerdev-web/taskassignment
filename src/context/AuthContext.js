@@ -11,12 +11,16 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     setToken(userToken);
     localStorage.setItem('token', userToken);
+    if (userData?._id) {
+      localStorage.setItem('userId', userData._id);
+    }
   }, []);
 
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
   }, []);
 
   const isAuthenticated = !!token;

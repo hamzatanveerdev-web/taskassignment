@@ -4,6 +4,11 @@ const API_URL =  'https://taskassignmentbackend.onrender.com/api/v1';
 
 
 console.log("API URLaaa:", API_URL);
+
+// Utility function to get userId from localStorage
+export const getUserId = () => {
+  return localStorage.getItem('userId');
+};
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
