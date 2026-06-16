@@ -19,7 +19,10 @@ const api = axios.create({
 // Add token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
+  // Don't add token to login and setup-password endpoints
+  const isAuthEndpoint = config.url.includes('/auth/login') || config.url.includes('/auth/setup-password');
+  
+  if (token && !isAuthEndpoint) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -34,6 +37,21 @@ export const authAPI = {
   getMe: () => api.get('/auth/me'),
 };
 console.log('Auth API:', authAPI); 
+
+// Add response interceptor to handle token expiration
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/setup-password') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+); 
 // Employee APIs
 export const employeeAPI = {
   getAll: (page = 1, limit = 10) => api.get(`/employees?page=${page}&limit=${limit}`),

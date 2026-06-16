@@ -23,6 +23,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
+    // Clear any existing tokens before login to prevent conflicts
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+
     try {
       const response = await authAPI.login(email, password);
       if (response.data.success) {
