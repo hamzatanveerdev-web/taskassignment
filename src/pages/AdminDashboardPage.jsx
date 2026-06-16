@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
-import TaskCard from '../components/TaskCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function AdminDashboardPage() {
@@ -128,19 +128,91 @@ export default function AdminDashboardPage() {
         </motion.div>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card">
-        <h2 className="text-base md:text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Tasks</h2>
-        <div className="grid gap-4">
-          {tasks.map((task) => (
-            <TaskCard 
-              key={task._id} 
-              task={task} 
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      </motion.div>
+    <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  className="card overflow-x-auto"
+>
+  <h2 className="text-base md:text-xl font-semibold text-gray-900 dark:text-white mb-4">
+    Tasks
+  </h2>
+
+  <table className="w-full text-sm text-left">
+    <thead>
+      <tr className="border-b text-gray-500">
+        <th className="py-3 px-2">Title</th>
+        <th className="py-3 px-2">Description</th>
+        <th className="py-3 px-2">Priority</th>
+        <th className="py-3 px-2">Status</th>
+        <th className="py-3 px-2">Due Date</th>
+        <th className="py-3 px-2 text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {tasks.map((task) => (
+        <tr
+          key={task._id}
+          className="border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+        >
+          {/* TITLE */}
+          <td className="py-3 px-2 font-medium text-gray-800 dark:text-white max-w-[150px] truncate">
+            {task.title}
+          </td>
+
+          {/* DESCRIPTION (TRUNCATE) */}
+        <td
+  className="py-3 px-2 text-gray-600 dark:text-gray-400 max-w-[250px] truncate"
+  title={task.description}
+>
+  {task.description}
+</td>
+          {/* PRIORITY */}
+          <td className="py-3 px-2">
+            <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600">
+              {task.priority}
+            </span>
+          </td>
+
+          {/* STATUS */}
+          <td className="py-3 px-2">
+            <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600">
+              {task.status}
+            </span>
+          </td>
+
+          {/* DATE */}
+          <td className="py-3 px-2 text-gray-600">
+            {new Date(task.dueDate).toLocaleDateString()}
+          </td>
+
+          {/* ACTIONS */}
+          <td className="py-3 px-2 text-right">
+          <div className="flex justify-end gap-2">
+
+  {/* DELETE */}
+  <button
+    onClick={() => handleDelete(task._id)}
+    className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition text-red-600"
+  >
+    <FaTrash />
+  </button>
+
+  {/* EDIT */}
+  <button
+    onClick={() => handleEdit(task)}
+    className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-600"
+  >
+    <FaEdit />
+  </button>
+
+</div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</motion.div>
     </>
   );
 }

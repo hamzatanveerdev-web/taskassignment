@@ -9,6 +9,7 @@ import pushService from './services/pushService';
 
 // Pages
 import LoginPage from './pages/LoginPage';
+import EmployeeAttendence from './pages/EmployeeAttendence';
 import SetupPasswordPage from './pages/SetupPasswordPage';
 import DashboardWrapper from './components/DashboardWrapper';
 import AdminDashboardPage from './pages/AdminDashboardPage';
@@ -20,6 +21,8 @@ import NotificationsPage from './pages/NotificationsPage';
 import TaskHistoryPage from './pages/TaskHistoryPage';
 import CompletedTasksPage from './pages/CompletedTasksPage';
 import ProfilePage from './pages/ProfilePage';
+
+
 
 // Protected Route Component
 function ProtectedRoute({ children, requiredRole = null }) {
@@ -126,6 +129,14 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+             <Route
+            path="/admin/employees/attendance"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <EmployeeAttendence />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Employee Routes */}
           <Route
@@ -180,6 +191,7 @@ function AppContent() {
           />
         </Route>
 
+
         {/* Redirect to login */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/login" />} />
@@ -202,7 +214,7 @@ function AppContent() {
 // Main App Component
 export default function App() {
 
-  
+
   return (
     <AuthProvider>
       <UIProvider>

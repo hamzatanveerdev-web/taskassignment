@@ -59,7 +59,7 @@ export default function AssignTaskPage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="card max-w-4xl"
+   className="card w-full"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

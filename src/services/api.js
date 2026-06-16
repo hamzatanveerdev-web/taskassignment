@@ -28,7 +28,7 @@ export const authAPI = {
     api.post('/auth/setup-password', { token, password, confirmPassword }),
   getMe: () => api.get('/auth/me'),
 };
-console.log('Auth API:', authAPI);
+console.log('Auth API:', authAPI); 
 // Employee APIs
 export const employeeAPI = {
   getAll: (page = 1, limit = 10) => api.get(`/employees?page=${page}&limit=${limit}`),
@@ -37,6 +37,15 @@ export const employeeAPI = {
   delete: (id) => api.delete(`/employees/${id}`),
   getById: (id) => api.get(`/employees/${id}`),
   search: (search) => api.get(`/employees/search?search=${search}`),
+
+};
+
+
+// Attendance APIs
+export const attendanceAPI = {
+  checkIn: (userId) => api.post('/attendance/check-in', { userId }),
+  
+  checkOut: (userId) => api.post('/attendance/check-out', { userId }),
 };
 
 // Task APIs

@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+import AttendanceCard from "../components/AttendanceCard";
+
 import { FiMenu, FiBell, FiLogOut } from 'react-icons/fi';
 
 
@@ -9,6 +11,7 @@ import { useAuth, useUI } from '../context/hooks';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ onMenuClick }) {
+  const { user } = useAuth();
   const { logout } = useAuth();
   const { unreadCount } = useUI();
   const navigate = useNavigate();
@@ -20,7 +23,7 @@ export default function Header({ onMenuClick }) {
 
   return (
     <motion.header
-      className="bg-white border-gray-200 border-b sticky top-0 z-40 transition-colors shadow-sm"
+   className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm transition-colors duration-300"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
     >
@@ -39,6 +42,8 @@ export default function Header({ onMenuClick }) {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
+
+             {user?.role === "employee" && <AttendanceCard />}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -46,6 +51,8 @@ export default function Header({ onMenuClick }) {
             className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3BC0E1]"
             title="Notifications"
           >
+         
+
             <FiBell size={20} className="text-gray-700" />
             {unreadCount > 0 && (
               <motion.span
