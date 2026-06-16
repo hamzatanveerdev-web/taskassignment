@@ -42,7 +42,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/setup-password') {
+      if (window.location.pathname !== '/login' && !window.location.pathname.startsWith('/setup-password')) {
         window.location.href = '/login';
       }
     }
@@ -61,13 +61,10 @@ export const employeeAPI = {
 };
 
 
-// Attendance APIs
 export const attendanceAPI = {
-  checkIn: api.post('/attendance/check-in'),
-  
-  checkOut:api.post('/attendance/check-out'),
+  checkIn: () => api.post("/attendance/check-in"),
+  checkOut: () => api.post("/attendance/check-out"),
 };
-
 // Task APIs
 export const taskAPI = {
   getAll: (page = 1, limit = 10, status = '', priority = '', assignedTo = '') =>
