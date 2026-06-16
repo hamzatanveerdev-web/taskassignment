@@ -13,9 +13,6 @@ export const getUserId = () => {
 const api = axios.create({
   baseURL: API_URL,
 });
-
-
-
 // Add token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -66,9 +63,9 @@ export const employeeAPI = {
 
 // Attendance APIs
 export const attendanceAPI = {
-  checkIn: (userId) => api.post('/attendance/check-in', { userId }),
+  checkIn: api.post('/attendance/check-in'),
   
-  checkOut: (userId) => api.post('/attendance/check-out', { userId }),
+  checkOut:api.post('/attendance/check-out'),
 };
 
 // Task APIs
