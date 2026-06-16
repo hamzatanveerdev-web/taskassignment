@@ -19,11 +19,11 @@ const AttendanceCard = () => {
 
     try {
       if (status === "check_in") {
-        await attendanceAPI.checkIn(userId);
+        await attendanceAPI.checkIn();
         toast.success("Checked in successfully");
         setStatus("check_out");
       } else {
-        await attendanceAPI.checkOut(userId);
+        await attendanceAPI.checkOut();
         toast.success("Checked out successfully");
         setStatus("check_in");
       }
