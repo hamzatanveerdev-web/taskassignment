@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { taskAPI } from "../services/api";
@@ -12,11 +12,7 @@ export default function TaskHistoryPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchCompletedTasks();
-  }, [page]);
-
-  const fetchCompletedTasks = async () => {
+  const fetchCompletedTasks = useCallback(async () => {
     setLoading(true);
     try {
       const response = await taskAPI.getAll(page, 10, "completed");
@@ -28,7 +24,11 @@ export default function TaskHistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
+
+  useEffect(() => {
+    fetchCompletedTasks();
+  }, [fetchCompletedTasks]);
 
   if (loading) return <LoadingSpinner />;
 
