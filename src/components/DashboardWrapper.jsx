@@ -32,24 +32,22 @@ export default function DashboardWrapper() {
     if (isMobile) setSidebarOpen(false);
   }, [isMobile]);
 
-  // ================= UNREAD COUNT =================
-  useEffect(() => {
-    if (!authReady || !user) return;
+useEffect(() => {
+  if (!authReady || !user) return;
 
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await notificationAPI.getUnreadCount();
-        if (response.data.success) {
-          setUnreadCount(response.data.unreadCount);
-        }
-      } catch (error) {
-        console.error('Error fetching unread count:', error);
-      }
-    };
+  fetchUnreadCount();
+}, [authReady, user, fetchUnreadCount]);
 
-    fetchUnreadCount();
-  }, [authReady, user, setUnreadCount]);
-
+  const fetchUnreadCount = useCallback(async () => {
+  try {
+    const response = await notificationAPI.getUnreadCount();
+    if (response.data.success) {
+      setUnreadCount(response.data.unreadCount);
+    }
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+  }
+}, [setUnreadCount]);
   // ================= SOCKET INIT =================
   useEffect(() => {
     if (!authReady || !user) return;
