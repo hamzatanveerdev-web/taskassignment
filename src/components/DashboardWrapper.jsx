@@ -1,9 +1,7 @@
-
 import { Outlet } from 'react-router-dom';
-
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth, useUI } from '../context/hooks';
 import { notificationAPI, getUserId } from '../services/api';
 import notificationManager from '../services/notificationManager';
@@ -11,36 +9,33 @@ import notificationManager from '../services/notificationManager';
 export default function DashboardWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
- 
-  const { user, userId } = useAuth();
+
+  const { user, userId, authReady } = useAuth();
   const { setUnreadCount } = useUI();
 
-  // Check if mobile on mount and resize
+  // ================= MOBILE CHECK =================
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      // Set default sidebar state based on screen size
-      if (window.innerWidth < 768) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
-      }
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
     };
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
+
     return () => window.removeEventListener('resize', checkMobile);
-  }, [setUnreadCount]);
+  }, []);
 
-  const handleCloseSidebar = () => {
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
-  };
+  // ================= SIDEBAR =================
+  const handleCloseSidebar = useCallback(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [isMobile]);
 
-  // Fetch initial unread count
-useEffect(() => {
-  if (user) {
+  // ================= UNREAD COUNT =================
+  useEffect(() => {
+    if (!authReady || !user) return;
+
     const fetchUnreadCount = async () => {
       try {
         const response = await notificationAPI.getUnreadCount();
@@ -53,27 +48,27 @@ useEffect(() => {
     };
 
     fetchUnreadCount();
-  }
-}, [user, setUnreadCount]);
-  // Initialize notification manager when component mounts
+  }, [authReady, user, setUnreadCount]);
+
+  // ================= SOCKET INIT =================
   useEffect(() => {
-    if (user) {
-      notificationManager.initSocket(userId || user?._id || getUserId());
-      
-      // Register handler to update unread count when new notifications arrive
-      const unsubscribe = notificationManager.onNotification((data, type) => {
-        setUnreadCount((prev) => prev + 1);
-      });
+    if (!authReady || !user) return;
 
-      console.log('Notification manager initialized');
+    const socketId = userId || user?._id || getUserId();
 
-      return () => {
-        unsubscribe();
-        // Cleanup on unmount
-        notificationManager.disconnect();
-      };
-    }
-  }, [user, userId, setUnreadCount]);
+    notificationManager.initSocket(socketId);
+
+    const unsubscribe = notificationManager.onNotification(() => {
+      setUnreadCount((prev) => prev + 1);
+    });
+
+    console.log('Notification manager initialized');
+
+    return () => {
+      unsubscribe();
+      notificationManager.disconnect();
+    };
+  }, [authReady, user, userId, setUnreadCount]);
 
   return (
     <div>
@@ -86,11 +81,23 @@ useEffect(() => {
       )}
 
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar isOpen={sidebarOpen} isMobile={isMobile} onClose={handleCloseSidebar} />
-        <div className={`flex-1 transition-all duration-300 ${
-            !isMobile && sidebarOpen ? 'ml-64' : !isMobile && !sidebarOpen ? 'ml-20' : ''
-          } w-full`}>
+        <Sidebar
+          isOpen={sidebarOpen}
+          isMobile={isMobile}
+          onClose={handleCloseSidebar}
+        />
+
+        <div
+          className={`flex-1 transition-all duration-300 ${
+            !isMobile && sidebarOpen
+              ? 'ml-64'
+              : !isMobile && !sidebarOpen
+              ? 'ml-20'
+              : ''
+          } w-full`}
+        >
           <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+
           <main className="p-4 md:p-8 w-full">
             <div className="max-w-7xl mx-auto">
               <Outlet />
