@@ -30,7 +30,7 @@ export default function DashboardWrapper() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [setUnreadCount]);
 
   const handleCloseSidebar = () => {
     if (isMobile) {
