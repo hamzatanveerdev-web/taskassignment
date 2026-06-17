@@ -25,21 +25,26 @@ import EmployeeAttendence from './pages/EmployeeAttendence';
 
 // ================= PROTECTED ROUTE =================
 function ProtectedRoute({ children, requiredRole = null }) {
-  const { user, isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading, authReady } = useAuth();
 
-  if (loading) {
+  // Show loading while validating token
+  if (loading || !authReady) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        Loading...
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3BC0E1] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
       </div>
     );
   }
 
+  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    alert('Please login first');
     return <Navigate to="/login" replace />;
   }
 
+  // Check role requirements
   if (requiredRole && user?.role !== requiredRole) {
     return (
       <Navigate

@@ -52,6 +52,14 @@ export default function DashboardWrapper() {
     fetchUnreadCount();
   }, [authReady, user, fetchUnreadCount]);
 
+  // ================= AUTH STATE CHANGE HANDLER =================
+  useEffect(() => {
+    if (!authReady) return;
+
+    // If user becomes unauthenticated, this will be handled by ProtectedRoute
+    // But we can add additional cleanup here if needed
+  }, [authReady, user]);
+
   // ================= SOCKET INIT =================
   useEffect(() => {
     if (!authReady || !user) return;
