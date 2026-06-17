@@ -79,7 +79,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     validateToken();
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount - logout is stable due to useCallback
 
   // ================= MOBILE VISIBILITY CHANGE HANDLER =================
   useEffect(() => {
