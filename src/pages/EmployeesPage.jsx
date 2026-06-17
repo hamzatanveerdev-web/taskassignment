@@ -211,38 +211,75 @@ export default function EmployeesPage() {
         </form>
       </div>
 
-      <div className="grid gap-3 md:gap-4">
-        {employees.map((employee) => (
-          <motion.div
-            key={employee._id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-          >
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 dark:text-white break-words">{employee.fullName}</h3>
-              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 break-all">{employee.email}</p>
-              <span className="inline-block mt-2 px-2 py-1 bg-[#3BC0E1]/20 text-[#3BC0E1] text-xs rounded font-medium">
-                {employee.role.toUpperCase()}
+     <div className="overflow-x-auto">
+  <table className="w-full min-w-[600px]">
+    <thead>
+      <tr className="border-b border-gray-200 dark:border-gray-700">
+        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Employee
+        </th>
+        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Email
+        </th>
+        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Role
+        </th>
+        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {employees.map((employee) => (
+        <motion.tr
+          key={employee._id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+        >
+          <td className="py-3 px-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#3BC0E1]/20 flex items-center justify-center text-[#3BC0E1] font-semibold text-sm">
+                {employee.fullName?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <span className="font-medium text-gray-900 dark:text-white">
+                {employee.fullName}
               </span>
             </div>
-            <div className="flex gap-2 w-full md:w-auto">
+          </td>
+          <td className="py-3 px-4">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {employee.email}
+            </span>
+          </td>
+          <td className="py-3 px-4">
+            <span className="inline-block px-2 py-1 bg-[#3BC0E1]/20 text-[#3BC0E1] text-xs rounded font-medium">
+              {employee.role?.toUpperCase() || 'USER'}
+            </span>
+          </td>
+          <td className="py-3 px-4">
+            <div className="flex items-center justify-end gap-2">
               <button
                 onClick={() => handleEdit(employee)}
-                className="flex-1 md:flex-none p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#3BC0E1]/10 text-[#3BC0E1] rounded-lg transition-colors"
+                title="Edit"
               >
                 <FiEdit2 size={18} />
               </button>
               <button
                 onClick={() => handleDelete(employee._id)}
-                className="flex-1 md:flex-none p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+                className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+                title="Delete"
               >
                 <FiTrash2 size={18} />
               </button>
             </div>
-          </motion.div>
-        ))}
-      </div>
+          </td>
+        </motion.tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
       {employees.length === 0 && (
         <div className="text-center py-12">

@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/hooks';
 import {
@@ -11,25 +11,23 @@ import {
   FiUser,
   FiBarChart2,
   FiLogOut,
+  FiChevronDown,
 } from 'react-icons/fi';
 
-export default function Sidebar({ isOpen, isMobile, onClose }) {
+export default function Sidebar({ isOpen, isMobile, onClose, onMouseEnter, onMouseLeave }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [hoveredMenu, setHoveredMenu] = useState(null);
 
   const adminMenuItems = [
     { path: '/admin/dashboard', icon: FiHome, label: 'Dashboard' },
     {
-      icon: FiUsers, label: 'Employees', children: [
-        {
-          path: '/admin/employees',
-          label: 'Add Employees'
-        },
-        {
-          path: '/admin/employees/attendance',
-          label: 'Attendance'
-        }
+      icon: FiUsers, 
+      label: 'Employees', 
+      children: [
+        { path: '/admin/employees', label: 'Add Employees' },
+        { path: '/admin/employees/attendance', label: 'Attendance' }
       ]
     },
     { path: '/admin/assign-task', icon: FiCheckSquare, label: 'Assign Task' },
@@ -54,109 +52,197 @@ export default function Sidebar({ isOpen, isMobile, onClose }) {
   };
 
   const handleNavigation = (path) => {
-    navigate(path);
-    onClose();
+    if (path) {
+      navigate(path);
+      if (isMobile) onClose();
+    }
+  };
+
+  const isChildActive = (children) => {
+    return children?.some(child => location.pathname === child.path);
+  };
+
+  const getSidebarWidth = () => {
+    if (isMobile) return isOpen ? 256 : 0;
+    return isOpen ? 256 : 80;
+  };
+
+  const toggleMobileMenu = (label) => {
+    if (isMobile) {
+      setHoveredMenu(hoveredMenu === label ? null : label);
+    }
   };
 
   return (
     <motion.aside
-      className={`bg-gray-900 text-white fixed left-0 top-0 h-screen overflow-y-auto transition-all duration-300 z-40 flex flex-col ${isMobile
-        ? 'w-64'
-        : `${isOpen ? 'w-64' : 'w-20'
-        } md:flex`
-        }`}
+      className="bg-gray-900 text-white fixed left-0 top-0 h-screen z-50 flex flex-col shadow-2xl overflow-hidden"
       initial={false}
       animate={{
-        width: isMobile ? 256 : isOpen ? 256 : 80,
+        width: getSidebarWidth(),
         x: isMobile && !isOpen ? -256 : 0,
+        opacity: isMobile && !isOpen ? 0 : 1,
       }}
-      transition={{ duration: 0.3 }}
+      transition={{
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1],
+        width: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+        x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+        opacity: { duration: 0.2, ease: "easeInOut" }
+      }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between">
-        <div className="flex items-center gap-3 flex-1">
-          {isMobile ? (
-            <h2 className="text-lg font-bold text-[#3BC0E1] flex-1">CODESTACK</h2>
-          ) : (
-            <>
-              <h2 className={`text-lg font-bold text-[#3BC0E1] ${!isOpen ? 'hidden' : ''}`}>
-                CODESTACK
-              </h2>
-            </>
-          )}
+      {/* Header - Fixed */}
+      <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3 flex-1 overflow-hidden">
+          <motion.h2 
+            className="text-lg font-bold text-[#3BC0E1] whitespace-nowrap"
+            animate={{
+              opacity: (isMobile ? isOpen : isOpen) ? 1 : 0,
+              scale: (isMobile ? isOpen : isOpen) ? 1 : 0.8,
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            CODESTACK
+          </motion.h2>
         </div>
       </div>
-      <div className="flex-1 px-2 py-4 space-y-1 overflow-hidden">
-        {menuItems.map((item) => {
-          const Icon = item.icon
 
-          return (
-            <div
-              className="relative group" key={item.label}>
+      {/* Scrollable Menu Area - Hide scrollbar */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-4 scrollbar-hide">
+        <div className="space-y-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const hasChildren = item.children && item.children.length > 0;
+            const isActive = location.pathname === item.path;
+            const isChildActiveNow = isChildActive(item.children);
+            const isHovered = hoveredMenu === item.label;
+            const showChildren = (isHovered && !isMobile) || (isMobile && isHovered);
 
-              {/* Parent Menu */}
-              <motion.button
-                onClick={() => {
-                  if (!item.children) {
-                    handleNavigation(item.path)
+            return (
+              <div 
+                key={item.label} 
+                className="mb-1"
+                onMouseEnter={() => {
+                  if (hasChildren && !isMobile) {
+                    setHoveredMenu(item.label);
                   }
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${location.pathname === item.path
-                  ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]'
-                  : 'hover:bg-gray-800 text-white'
-                  }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
+                onMouseLeave={() => {
+                  if (hasChildren && !isMobile) {
+                    setHoveredMenu(null);
+                  }
+                }}
               >
-                <Icon size={20} />
+                {/* Parent Menu Button */}
+                <motion.button
+                  onClick={() => {
+                    if (hasChildren) {
+                      toggleMobileMenu(item.label);
+                    } else if (item.path) {
+                      handleNavigation(item.path);
+                    }
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors relative ${
+                    isActive || isChildActiveNow
+                      ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]'
+                      : 'hover:bg-gray-800 text-white'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {Icon && <Icon size={20} className="flex-shrink-0" />}
 
-                {(isMobile || isOpen) && (
-                  <div className="flex justify-between w-full">
-                    <span>{item.label}</span>
-
-                    {item.children && (
-                      <span className="text-xs">▼</span>
-                    )}
-                  </div>
-                )}
-              </motion.button>
-
-              {item.children && (
-                <div
-                  className="ml-8 max-h-0 overflow-hidden  opacity-0 group-hover:max-h-[140px] group-hover:opacity-100 transition-[max-height,opacity] duration-300 ease-in-out  ">
-
-                  {item.children.map((child) => {
-                    const active =
-                      location.pathname === child.path
-
-                    return (
-                      <button
-                        key={child.path}
-                        onClick={() =>
-                          handleNavigation(child.path)
-                        }
-                        className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${active
-                          ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]'
-                          : 'text-gray-300 hover:bg-gray-800'
-                          }`}
+                  <motion.div
+                    className="flex justify-between w-full items-center overflow-hidden"
+                    animate={{
+                      opacity: (isMobile ? isOpen : isOpen) ? 1 : 0,
+                      width: (isMobile ? isOpen : isOpen) ? 'auto' : 0,
+                      marginLeft: (isMobile ? isOpen : isOpen) ? '0.75rem' : 0,
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span className="whitespace-nowrap">{item.label}</span>
+                    {hasChildren && (
+                      <motion.span 
+                        className="text-xs ml-2 flex-shrink-0"
+                        animate={{ rotate: isHovered ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        {child.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          )
-        })}
+                        <FiChevronDown size={16} />
+                      </motion.span>
+                    )}
+                  </motion.div>
+                </motion.button>
+
+                {/* Children Menu */}
+                {hasChildren && (
+                  <AnimatePresence>
+                    {showChildren && (isOpen || isMobile) && (
+                      <motion.div
+                        initial={{ 
+                          maxHeight: 0, 
+                          opacity: 0,
+                          y: -10
+                        }}
+                        animate={{ 
+                          maxHeight: 500, 
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        exit={{ 
+                          maxHeight: 0, 
+                          opacity: 0,
+                          y: -10,
+                        }}
+                        transition={{
+                          maxHeight: { duration: 0.3, ease: "easeInOut" },
+                          opacity: { duration: 0.2 },
+                          y: { duration: 0.2 }
+                        }}
+                        className="ml-8 overflow-hidden"
+                      >
+                        {item.children.map((child) => {
+                          const active = location.pathname === child.path;
+                          return (
+                            <button
+                              key={child.path}
+                              onClick={() => handleNavigation(child.path)}
+                              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                active
+                                  ? 'bg-[#3BC0E1]/20 text-[#3BC0E1]'
+                                  : 'text-gray-300 hover:bg-gray-800'
+                              }`}
+                            >
+                              {child.label}
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* User Info & Logout Section */}
-      <div className="border-t border-gray-800 p-4 space-y-2">
+      {/* Footer - Fixed */}
+      <div className="border-t border-gray-800 p-4 space-y-2 flex-shrink-0">
         {(isMobile || isOpen) && user && (
-          <div className="px-4 py-2 mb-2 bg-gray-800 rounded-lg">
-            <p className="text-sm font-semibold text-gray-100">{user.fullName}</p>
-            <p className="text-xs text-gray-400 capitalize">{user.role}</p>
-          </div>
+          <motion.div 
+            className="px-4 py-2 mb-2 bg-gray-800 rounded-lg overflow-hidden"
+            animate={{
+              opacity: (isMobile ? isOpen : isOpen) ? 1 : 0,
+              height: (isMobile ? isOpen : isOpen) ? 'auto' : 0,
+              marginBottom: (isMobile ? isOpen : isOpen) ? '0.5rem' : 0,
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            <p className="text-sm font-semibold text-gray-100 truncate">{user?.fullName || 'User'}</p>
+            <p className="text-xs text-gray-400 capitalize">{user?.role || 'Role'}</p>
+          </motion.div>
         )}
         <motion.button
           onClick={handleLogout}
@@ -165,7 +251,15 @@ export default function Sidebar({ isOpen, isMobile, onClose }) {
           whileTap={{ scale: 0.95 }}
         >
           <FiLogOut size={20} className="flex-shrink-0" />
-          {isMobile || isOpen ? <span>Logout</span> : null}
+          <motion.span
+            animate={{
+              opacity: (isMobile ? isOpen : isOpen) ? 1 : 0,
+              width: (isMobile ? isOpen : isOpen) ? 'auto' : 0,
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            Logout
+          </motion.span>
         </motion.button>
       </div>
     </motion.aside>

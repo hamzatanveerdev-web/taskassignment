@@ -23,7 +23,7 @@ export default function Header({ onMenuClick }) {
 
   return (
     <motion.header
-   className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm transition-colors duration-300"
+      className="sticky top-0 z-10 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-md transition-all duration-300"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
     >
