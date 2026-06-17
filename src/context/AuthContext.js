@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
 
   const [loading, setLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
 
  const login = useCallback((userData, userToken) => {
   setUser(userData);
@@ -26,16 +27,14 @@ useEffect(() => {
   const savedUser = localStorage.getItem('user');
 
   if (savedToken) setToken(savedToken);
-
   if (savedUser) setUser(JSON.parse(savedUser));
 
   const savedUserId = localStorage.getItem('userId');
   if (savedUserId) setUserId(savedUserId);
 
-  setLoading(false); // IMPORTANT
-
+  setAuthReady(true); // 👈 IMPORTANT
+  setLoading(false);
 }, []);
-
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
@@ -43,7 +42,7 @@ useEffect(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
   }, []);
-const isAuthenticated = !!token && !!user;
+const isAuthenticated = authReady && !!token && !!user;
 
   return (
     <AuthContext.Provider value={{ user, token, userId, loading, setLoading, login, logout, isAuthenticated }}>
