@@ -46,16 +46,19 @@ function AppContent() {
   useEffect(() => {
     // Try to get current user if token exists
     const token = localStorage.getItem('token');
+    console.log('App useEffect - Token exists:', !!token, 'User exists:', !!user);
     if (token && !user) {
       setLoading(true);
       authAPI
         .getMe()
         .then((res) => {
+          console.log('getMe success:', res.data);
           if (res.data.success) {
             login(res.data.user, token);
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('getMe error:', error.response?.data, error.response?.status);
           localStorage.removeItem('token');
           localStorage.removeItem('userId');
         })

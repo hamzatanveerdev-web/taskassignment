@@ -32,13 +32,19 @@ export default function SetupPasswordPage() {
 
     try {
       const response = await authAPI.setupPassword(token, password, confirmPassword);
-      if (response.data.success) {
-       
+   if (response.data.success) {
   localStorage.setItem("user", JSON.stringify(response.data.user));
-        login(response.data.user, response.data.token);
-        toast.success('Password setup successful! Logging you in...');
-        navigate(response.data.user.role === 'admin' ? '/admin/dashboard' : '/employee/dashboard');
-      }
+  localStorage.setItem("token", response.data.token); // 👈 ADD THIS LINE
+
+  login(response.data.user, response.data.token);
+
+  toast.success('Password setup successful! Logging you in...');
+  navigate(
+    response.data.user.role === 'admin'
+      ? '/admin/dashboard'
+      : '/employee/dashboard'
+  );
+}
     } catch (error) {
       toast.error(error.response?.data?.message || 'Setup failed');
     } finally {

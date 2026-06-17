@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback } from 'react';
+import { createContext, useState,useEffect , useCallback } from 'react';
 
 export const AuthContext = createContext();
 
@@ -8,15 +8,32 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [loading, setLoading] = useState(false);
 
-  const login = useCallback((userData, userToken) => {
-    setUser(userData);
-    setToken(userToken);
-    localStorage.setItem('token', userToken);
-    if (userData?._id) {
-      localStorage.setItem('userId', userData._id);
-      setUserId(userData._id);
-    }
-  }, []);
+ const login = useCallback((userData, userToken) => {
+  setUser(userData);
+  setToken(userToken);
+
+  localStorage.setItem('token', userToken);
+  localStorage.setItem('user', JSON.stringify(userData)); // 👈 ADD THIS
+
+  if (userData?._id) {
+    localStorage.setItem('userId', userData._id);
+    setUserId(userData._id);
+  }
+}, []);
+useEffect(() => {
+  const savedToken = localStorage.getItem('token');
+  const savedUser = localStorage.getItem('user');
+
+  if (savedToken && savedUser) {
+    setToken(savedToken);
+    setUser(JSON.parse(savedUser));
+
+    const savedUserId = localStorage.getItem('userId');
+    if (savedUserId) setUserId(savedUserId);
+  }
+}, []);
+
+
 
   const logout = useCallback(() => {
     setUser(null);

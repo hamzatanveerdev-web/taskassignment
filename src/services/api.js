@@ -16,12 +16,15 @@ const api = axios.create({
 // Add token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  // Don't add token to login and setup-password endpoints
-  const isAuthEndpoint = config.url.includes('/auth/login') || config.url.includes('/auth/setup-password');
-  
+
+  const isAuthEndpoint =
+    config.url.includes('/auth/login') ||
+    config.url.includes('/auth/setup-password');
+
   if (token && !isAuthEndpoint) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
@@ -39,7 +42,9 @@ console.log('Auth API:', authAPI);
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error.config?.url, error.response?.status, error.response?.data);
     if (error.response?.status === 401) {
+      console.log('401 error - removing token');
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       if (window.location.pathname !== '/login' && !window.location.pathname.startsWith('/setup-password')) {
@@ -90,4 +95,19 @@ export const notificationAPI = {
   getUnreadCount: () => api.get('/notifications/unread-count'),
 };
 
+
+
+export const getToken = () => {
+  return localStorage.getItem("token");
+};
+
+export const setToken = (token) => {
+  localStorage.setItem("token", token);
+};
+
+export const removeAuth = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("userId");
+};
 export default api;
