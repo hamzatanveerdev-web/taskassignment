@@ -34,9 +34,10 @@ function ProtectedRoute({ children, requiredRole = null }) {
   }
 
   // ⛔ not logged in
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
+ 
+if (!isAuthenticated) {
+  return <Navigate to="/login" replace />;
+}
 
   // ⛔ role check
   if (requiredRole && user?.role !== requiredRole) {
