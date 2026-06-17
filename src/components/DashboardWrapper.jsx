@@ -32,8 +32,7 @@ export default function DashboardWrapper() {
     if (isMobile) setSidebarOpen(false);
   }, [isMobile]);
 
-
-  const fetchUnreadCount = useCallback(async () => {
+const fetchUnreadCount = useCallback(async () => {
   try {
     const response = await notificationAPI.getUnreadCount();
     if (response.data.success) {
@@ -44,13 +43,11 @@ export default function DashboardWrapper() {
   }
 }, [setUnreadCount]);
 
-
 useEffect(() => {
   if (!authReady || !user) return;
 
   fetchUnreadCount();
 }, [authReady, user, fetchUnreadCount]);
-
   // ================= SOCKET INIT =================
   useEffect(() => {
     if (!authReady || !user) return;
