@@ -26,14 +26,25 @@ import ProfilePage from './pages/ProfilePage';
 
 // Protected Route Component
 function ProtectedRoute({ children, requiredRole = null }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
 
+  // ⛔ WAIT until auth is ready
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // ⛔ not logged in
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
+  // ⛔ role check
   if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to={user?.role === 'admin' ? '/admin/dashboard' : '/employee/dashboard'} />;
+    return (
+      <Navigate
+        to={user?.role === 'admin' ? '/admin/dashboard' : '/employee/dashboard'}
+      />
+    );
   }
 
   return children;
