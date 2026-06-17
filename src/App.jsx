@@ -36,6 +36,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
   }
 
   if (!isAuthenticated) {
+    alert('Please login first');
     return <Navigate to="/login" replace />;
   }
 
