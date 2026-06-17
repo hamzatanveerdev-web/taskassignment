@@ -6,6 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
+
   const [loading, setLoading] = useState(true);
 
  const login = useCallback((userData, userToken) => {
@@ -32,6 +33,7 @@ useEffect(() => {
   if (savedUserId) setUserId(savedUserId);
 
   setLoading(false); // IMPORTANT
+
 }, []);
 
   const logout = useCallback(() => {
