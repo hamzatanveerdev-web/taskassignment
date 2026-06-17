@@ -32,11 +32,6 @@ export default function DashboardWrapper() {
     if (isMobile) setSidebarOpen(false);
   }, [isMobile]);
 
-useEffect(() => {
-  if (!authReady || !user) return;
-
-  fetchUnreadCount();
-}, [authReady, user, fetchUnreadCount]);
 
   const fetchUnreadCount = useCallback(async () => {
   try {
@@ -48,6 +43,14 @@ useEffect(() => {
     console.error('Error fetching unread count:', error);
   }
 }, [setUnreadCount]);
+
+
+useEffect(() => {
+  if (!authReady || !user) return;
+
+  fetchUnreadCount();
+}, [authReady, user, fetchUnreadCount]);
+
   // ================= SOCKET INIT =================
   useEffect(() => {
     if (!authReady || !user) return;
