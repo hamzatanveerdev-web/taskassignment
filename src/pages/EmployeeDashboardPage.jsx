@@ -1,41 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
+import { useAuth } from '../context/hooks';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TaskCard from '../components/TaskCard';
-
-import AttendanceCard from "../components/AttendanceCard";
+import AttendanceCard from '../components/AttendanceCard';
 
 export default function EmployeeDashboardPage() {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ pending: 0, started: 0, completed: 0 });
   const [loading, setLoading] = useState(false);
-  
-  const { user } = useAuth();
-  // Timer States
-
-  const [timerStarted, setTimerStarted] = useState(null); // timestamp
-
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
-    checkTimerStatus(); // Check if timer was running
   }, []);
-
-  // Timer effect
-  useEffect(() => {
-    let interval = null;
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        setTotalSeconds(prev => prev + 1);
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isTimerRunning,timerStarted]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -57,62 +37,39 @@ export default function EmployeeDashboardPage() {
     }
   };
 
-  // Check if timer was running (localStorage)
-  const checkTimerStatus = () => {
-    const savedTimer = localStorage.getItem('employeeTimer');
-    if (savedTimer) {
-      const timerData = JSON.parse(savedTimer);
-      const elapsed = Math.floor((Date.now() - timerData.startTime) / 1000);
-      setIsCheckedIn(true);
-      setIsTimerRunning(true);
-      setTimerStarted(timerData.startTime);
-      setTotalSeconds(elapsed);
-    }
-  };
-
-
-
-  // Format time (HH:MM:SS)
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   if (loading) return <LoadingSpinner />;
 
   return (
     <>
-      {/* Timer Header */}
-    
-   {user?.role === "employee" && <AttendanceCard />}
+      {/* Attendance Timer */}
+      {user?.role === "employee" && <AttendanceCard />}
+
       <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">
         My Dashboard
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="card"
         >
           <p className="text-gray-600 dark:text-gray-400 text-sm">Pending Tasks</p>
           <p className="text-2xl md:text-3xl font-bold text-yellow-600">{stats.pending}</p>
         </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ delay: 0.1 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
           className="card"
         >
           <p className="text-gray-600 dark:text-gray-400 text-sm">Started Tasks</p>
           <p className="text-2xl md:text-3xl font-bold text-blue-600">{stats.started}</p>
         </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ delay: 0.2 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
           className="card"
         >
           <p className="text-gray-600 dark:text-gray-400 text-sm">Completed Tasks</p>
@@ -120,9 +77,9 @@ export default function EmployeeDashboardPage() {
         </motion.div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }} 
-        animate={{ opacity: 1, y: 0 }} 
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         className="card"
       >
         <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-4">
