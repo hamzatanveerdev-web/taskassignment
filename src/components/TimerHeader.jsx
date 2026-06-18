@@ -40,7 +40,7 @@ export default function TimerHeader({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             
             {/* Timer Section */}
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start z-50">
               <div className={`
                 p-2 rounded-full
                 transition-colors duration-300

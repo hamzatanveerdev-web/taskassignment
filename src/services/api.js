@@ -72,6 +72,7 @@ export const attendanceAPI = {
   getStatus: (userId) => api.get(`/attendance/today`),
   getTimerStatus: () => api.get("/attendance/timer-status"),
   getMyAttendance: () => api.get("/attendance/my"),
+  getAllAttendance: () => api.get("/attendance/all"),
 };
 // Task APIs
 export const taskAPI = {
