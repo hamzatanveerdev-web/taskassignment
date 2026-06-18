@@ -116,7 +116,7 @@ export default function EmployeesPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowAddForm(!showAddForm)}
             disabled={actionLoading}
-            className="btn-primary flex items-center gap-2 w-full md:w-auto justify-center"
+            className="btn-primary flex items-center gap-2 w-auto max-w-full sm:w-auto ml-auto md:w-auto justify-center "
           >
             <FiPlus /> Add Employee
           </motion.button>
@@ -212,19 +212,22 @@ export default function EmployeesPage() {
       </div>
 
      <div className="overflow-x-auto">
-  <table className="w-full min-w-[600px]">
-    <thead>
+  <table className="w-full min-w-[600px] border-separate border-spacing-0 rounded-lg overflow-hidden">
+    <thead className='bg-[#3BC0E1] f '>
       <tr className="border-b border-gray-200 dark:border-gray-700">
-        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-          Employee
+        <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Name
         </th>
-        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+        <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
           Email
         </th>
-        <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+        <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
           Role
         </th>
-        <th className="text-right py-3 px-4 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+          Joining Date
+        </th>
+        <th className="text-right py-3 px-4 text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
           Actions
         </th>
       </tr>
@@ -257,6 +260,13 @@ export default function EmployeesPage() {
               {employee.role?.toUpperCase() || 'USER'}
             </span>
           </td>
+
+          <td className="py-3 px-4">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {new Date(employee.createdAt).toLocaleDateString()}
+            </span>
+          </td>
+
           <td className="py-3 px-4">
             <div className="flex items-center justify-end gap-2">
               <button

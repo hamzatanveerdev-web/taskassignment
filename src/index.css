@@ -115,3 +115,29 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+
+
+
+/* Custom breakpoint for extra small screens */
+@layer utilities {
+  .xs\:inline {
+    @media (min-width: 475px) {
+      display: inline;
+    }
+  }
+  .xs\:hidden {
+    @media (max-width: 474px) {
+      display: none;
+    }
+  }
+}
+
+/* Timer pulse animation */
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-timer-pulse {
+  animation: timerPulse 1.5s ease-in-out infinite;
+}
