@@ -8,7 +8,7 @@ const AttendanceCard = () => {
   const { user } = useAuth();
 
   const [status, setStatus] = useState("check_in"); // "check_in" or "check_out"
-  const [loading, setLoading] = useState(false);
+  
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [accumulatedSeconds, setAccumulatedSeconds] = useState(0);
   const [displaySeconds, setDisplaySeconds] = useState(0);
@@ -48,6 +48,9 @@ const AttendanceCard = () => {
         setStatus("check_in");
       }
     };
+
+
+
 
     fetchTimerStatus();
   }, [userId]);
@@ -124,7 +127,6 @@ const AttendanceCard = () => {
       return;
     }
 
-    setLoading(true);
 
     try {
       const res = await attendanceAPI.checkIn();
@@ -146,7 +148,7 @@ const AttendanceCard = () => {
         }
       });
     } finally {
-      setLoading(false);
+ 
     }
   };
 
@@ -156,7 +158,7 @@ const AttendanceCard = () => {
       return;
     }
 
-    setLoading(true);
+
 
     try {
       const res = await attendanceAPI.checkOut();
@@ -177,7 +179,7 @@ const AttendanceCard = () => {
         }
       });
     } finally {
-      setLoading(false);
+
     }
   };
 
