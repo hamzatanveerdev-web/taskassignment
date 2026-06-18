@@ -69,6 +69,9 @@ export const employeeAPI = {
 export const attendanceAPI = {
   checkIn: () => api.post("/attendance/check-in"),
   checkOut: () => api.post("/attendance/check-out"),
+  getStatus: (userId) => api.get(`/attendance/today`),
+  getTimerStatus: () => api.get("/attendance/timer-status"),
+  getMyAttendance: () => api.get("/attendance/my"),
 };
 // Task APIs
 export const taskAPI = {

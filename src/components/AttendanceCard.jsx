@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { attendanceAPI, getUserId } from "../services/api";
 import { useAuth } from "../context/hooks";
 import toast from "react-hot-toast";
@@ -6,27 +6,116 @@ import toast from "react-hot-toast";
 const AttendanceCard = () => {
   const { user } = useAuth();
 
-  const [status, setStatus] = useState(null); // IMPORTANT FIX
+  const [status, setStatus] = useState("check_in"); // "check_in" or "check_out"
   const [loading, setLoading] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [accumulatedSeconds, setAccumulatedSeconds] = useState(0);
+  const [displaySeconds, setDisplaySeconds] = useState(0);
 
   const userId = user?._id || getUserId();
+  const timerIntervalRef = useRef(null);
+  const lastUpdateTimeRef = useRef(Date.now());
 
-  // ✅ Load current status from backend
+  // Format seconds to HH:MM:SS
+  const formatTime = useCallback((totalSeconds) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }, []);
+
+  // Load timer status from backend
   useEffect(() => {
-    const fetchStatus = async () => {
+    const fetchTimerStatus = async () => {
       if (!userId) return;
 
       try {
-        const res = await attendanceAPI.getStatus(userId);
-        setStatus(res.data.status); // "check_in" or "check_out"
+        const res = await attendanceAPI.getTimerStatus();
+        if (res.data.success) {
+          setStatus(res.data.status);
+          setIsTimerRunning(res.data.isRunning);
+          setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
+          setDisplaySeconds(res.data.accumulatedSeconds || 0);
+          
+          if (res.data.isRunning) {
+            lastUpdateTimeRef.current = Date.now();
+          }
+        }
       } catch (error) {
-        console.error(error);
-        setStatus("check_in"); // fallback
+        console.error("Failed to fetch timer status:", error);
+        setStatus("check_in");
       }
     };
 
-    fetchStatus();
+    fetchTimerStatus();
   }, [userId]);
+
+  // Timer logic
+  useEffect(() => {
+    if (isTimerRunning) {
+      timerIntervalRef.current = setInterval(() => {
+        const now = Date.now();
+        const elapsedSeconds = Math.floor((now - lastUpdateTimeRef.current) / 1000);
+        setDisplaySeconds(prev => prev + elapsedSeconds);
+        lastUpdateTimeRef.current = now;
+
+        // Sync with localStorage for persistence
+        localStorage.setItem('timerData', JSON.stringify({
+          displaySeconds: displaySeconds + elapsedSeconds,
+          lastUpdateTime: now,
+          isTimerRunning: true,
+          accumulatedSeconds: accumulatedSeconds
+        }));
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      localStorage.removeItem('timerData');
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isTimerRunning, displaySeconds, accumulatedSeconds]);
+
+  // Restore timer from localStorage on page load
+  useEffect(() => {
+    const savedTimerData = localStorage.getItem('timerData');
+    if (savedTimerData) {
+      try {
+        const data = JSON.parse(savedTimerData);
+        if (data.isTimerRunning) {
+          const now = Date.now();
+          const elapsedSeconds = Math.floor((now - data.lastUpdateTime) / 1000);
+          setDisplaySeconds(data.displaySeconds + elapsedSeconds);
+          setAccumulatedSeconds(data.accumulatedSeconds);
+          lastUpdateTimeRef.current = now;
+          
+          // Verify with backend that timer is actually running
+          attendanceAPI.getTimerStatus().then(res => {
+            if (res.data.success && !res.data.isRunning) {
+              // Backend shows timer is not running, reset
+              setIsTimerRunning(false);
+              setDisplaySeconds(res.data.accumulatedSeconds || 0);
+              localStorage.removeItem('timerData');
+            }
+          }).catch(() => {
+            // If error, assume timer is not running
+            setIsTimerRunning(false);
+            localStorage.removeItem('timerData');
+          });
+        }
+      } catch (error) {
+        console.error('Failed to parse saved timer data:', error);
+        localStorage.removeItem('timerData');
+      }
+    }
+  }, []);
 
   const handleClick = async () => {
     if (!userId) {
@@ -38,46 +127,84 @@ const AttendanceCard = () => {
 
     try {
       if (status === "check_in") {
-        await attendanceAPI.checkIn({ userId });
-        toast.success("Checked in successfully");
-        setStatus("check_out"); // switch button
+        // Check In - Start Timer
+        const res = await attendanceAPI.checkIn();
+        if (res.data.success) {
+          toast.success("Checked in successfully");
+          setStatus("check_out");
+          setIsTimerRunning(true);
+          setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
+          setDisplaySeconds(res.data.accumulatedSeconds || 0);
+          lastUpdateTimeRef.current = Date.now();
+        }
       } else {
-        await attendanceAPI.checkOut({ userId });
-        toast.success("Checked out successfully");
-        setStatus("check_in"); // switch button
+        // Check Out - Stop Timer
+        const res = await attendanceAPI.checkOut();
+        if (res.data.success) {
+          toast.success(`Checked out successfully. Worked: ${formatTime(res.data.accumulatedSeconds)}`);
+          setStatus("check_in");
+          setIsTimerRunning(false);
+          setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
+          setDisplaySeconds(res.data.accumulatedSeconds || 0);
+        }
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed");
+      // Refresh status on error
+      attendanceAPI.getTimerStatus().then(res => {
+        if (res.data.success) {
+          setStatus(res.data.status);
+          setIsTimerRunning(res.data.isRunning);
+        }
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const isCheckIn = status === "check_in";
+  const timerDisplay = formatTime(displaySeconds);
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={loading || !status}
-      className={`
-        relative overflow-hidden px-5 py-2 rounded-full text-sm font-semibold text-white
-        transition-all duration-300 shadow-md
-        ${isCheckIn ? "bg-green-600" : "bg-red-600"}
-        ${loading ? "scale-95 opacity-80" : "hover:scale-105"}
-      `}
-    >
-      {loading && (
-        <span className="absolute inset-0 bg-white/20 animate-ping rounded-full" />
-      )}
+    <div className="flex items-center gap-3">
+      {/* Timer Display */}
+      <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+        <div className={`w-2 h-2 rounded-full ${isTimerRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+        <span className="font-mono text-sm font-medium text-gray-700">
+          {timerDisplay}
+        </span>
+      </div>
 
-      <span className="relative z-10">
-        {loading
-          ? "Processing..."
-          : isCheckIn
-          ? "Check In"
-          : "Check Out"}
-      </span>
-    </button>
+      {/* Check In/Out Button */}
+      <button
+        onClick={handleClick}
+        disabled={loading}
+        className={`
+          relative overflow-hidden px-4 py-2 sm:px-5 sm:py-2 rounded-full text-sm font-semibold text-white
+          transition-all duration-300 shadow-md
+          ${isCheckIn ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
+          ${loading ? "scale-95 opacity-80 cursor-not-allowed" : "hover:scale-105"}
+        `}
+      >
+        {loading && (
+          <span className="absolute inset-0 bg-white/20 animate-ping rounded-full" />
+        )}
+
+        <span className="relative z-10 flex items-center gap-2">
+          {loading ? (
+            "Processing..."
+          ) : (
+            <>
+              {isCheckIn ? "Check In" : "Check Out"}
+              {/* Mobile timer display */}
+              <span className="sm:hidden font-mono text-xs opacity-90">
+                ({timerDisplay})
+              </span>
+            </>
+          )}
+        </span>
+      </button>
+    </div>
   );
 };
 
