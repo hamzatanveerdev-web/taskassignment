@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { attendanceAPI, getUserId } from "../services/api";
 import { useAuth } from "../context/hooks";
 import toast from "react-hot-toast";
+import TimerHeader from "./TimerHeader"; // Adjust the import path as needed
 
 const AttendanceCard = () => {
   const { user } = useAuth();
@@ -117,7 +118,7 @@ const AttendanceCard = () => {
     }
   }, []);
 
-  const handleClick = async () => {
+  const handleCheckIn = async () => {
     if (!userId) {
       toast.error("User not found");
       return;
@@ -126,30 +127,17 @@ const AttendanceCard = () => {
     setLoading(true);
 
     try {
-      if (status === "check_in") {
-        // Check In - Start Timer
-        const res = await attendanceAPI.checkIn();
-        if (res.data.success) {
-          toast.success("Checked in successfully");
-          setStatus("check_out");
-          setIsTimerRunning(true);
-          setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
-          setDisplaySeconds(res.data.accumulatedSeconds || 0);
-          lastUpdateTimeRef.current = Date.now();
-        }
-      } else {
-        // Check Out - Stop Timer
-        const res = await attendanceAPI.checkOut();
-        if (res.data.success) {
-          toast.success(`Checked out successfully. Worked: ${formatTime(res.data.accumulatedSeconds)}`);
-          setStatus("check_in");
-          setIsTimerRunning(false);
-          setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
-          setDisplaySeconds(res.data.accumulatedSeconds || 0);
-        }
+      const res = await attendanceAPI.checkIn();
+      if (res.data.success) {
+        toast.success("Checked in successfully");
+        setStatus("check_out");
+        setIsTimerRunning(true);
+        setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
+        setDisplaySeconds(res.data.accumulatedSeconds || 0);
+        lastUpdateTimeRef.current = Date.now();
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed");
+      toast.error(error?.response?.data?.message || "Failed to check in");
       // Refresh status on error
       attendanceAPI.getTimerStatus().then(res => {
         if (res.data.success) {
@@ -162,49 +150,49 @@ const AttendanceCard = () => {
     }
   };
 
-  const isCheckIn = status === "check_in";
+  const handleCheckOut = async () => {
+    if (!userId) {
+      toast.error("User not found");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await attendanceAPI.checkOut();
+      if (res.data.success) {
+        toast.success(`Checked out successfully. Worked: ${formatTime(res.data.accumulatedSeconds)}`);
+        setStatus("check_in");
+        setIsTimerRunning(false);
+        setAccumulatedSeconds(res.data.accumulatedSeconds || 0);
+        setDisplaySeconds(res.data.accumulatedSeconds || 0);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to check out");
+      // Refresh status on error
+      attendanceAPI.getTimerStatus().then(res => {
+        if (res.data.success) {
+          setStatus(res.data.status);
+          setIsTimerRunning(res.data.isRunning);
+        }
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isCheckedIn = status === "check_out";
   const timerDisplay = formatTime(displaySeconds);
 
   return (
-    <div className="flex items-center gap-3">
-      {/* Timer Display */}
-      <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
-        <div className={`w-2 h-2 rounded-full ${isTimerRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
-        <span className="font-mono text-sm font-medium text-gray-700">
-          {timerDisplay}
-        </span>
-      </div>
-
-      {/* Check In/Out Button */}
-      <button
-        onClick={handleClick}
-        disabled={loading}
-        className={`
-          relative overflow-hidden px-4 py-2 sm:px-5 sm:py-2 rounded-full text-sm font-semibold text-white
-          transition-all duration-300 shadow-md
-          ${isCheckIn ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
-          ${loading ? "scale-95 opacity-80 cursor-not-allowed" : "hover:scale-105"}
-        `}
-      >
-        {loading && (
-          <span className="absolute inset-0 bg-white/20 animate-ping rounded-full" />
-        )}
-
-        <span className="relative z-10 flex items-center gap-2">
-          {loading ? (
-            "Processing..."
-          ) : (
-            <>
-              {isCheckIn ? "Check In" : "Check Out"}
-              {/* Mobile timer display */}
-              <span className="sm:hidden font-mono text-xs opacity-90">
-                ({timerDisplay})
-              </span>
-            </>
-          )}
-        </span>
-      </button>
-    </div>
+    <TimerHeader
+      isCheckedIn={isCheckedIn}
+      timerDisplay={timerDisplay}
+      onCheckIn={handleCheckIn}
+      onCheckOut={handleCheckOut}
+      isTimerRunning={isTimerRunning}
+      totalTimeToday={accumulatedSeconds}
+    />
   );
 };
 
