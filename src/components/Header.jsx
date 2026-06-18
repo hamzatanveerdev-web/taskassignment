@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import AttendanceCard from "../components/AttendanceCard";
 
 import { FiMenu, FiBell, FiLogOut } from 'react-icons/fi';
 
@@ -11,7 +10,6 @@ import { useAuth, useUI } from '../context/hooks';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ onMenuClick }) {
-  const { user } = useAuth();
   const { logout } = useAuth();
   const { unreadCount } = useUI();
   const navigate = useNavigate();
@@ -43,7 +41,7 @@ export default function Header({ onMenuClick }) {
 
         <div className="flex items-center gap-2 md:gap-4">
 
-             {user?.role === "employee" && <AttendanceCard />}
+          
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

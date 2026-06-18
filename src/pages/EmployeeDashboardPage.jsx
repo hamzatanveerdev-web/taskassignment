@@ -4,17 +4,19 @@ import toast from 'react-hot-toast';
 import { taskAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TaskCard from '../components/TaskCard';
-import TimerHeader from '../components/TimerHeader'; // New component
+
+import AttendanceCard from "../components/AttendanceCard";
 
 export default function EmployeeDashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ pending: 0, started: 0, completed: 0 });
   const [loading, setLoading] = useState(false);
   
+  const { user } = useAuth();
   // Timer States
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
+
   const [timerStarted, setTimerStarted] = useState(null); // timestamp
-  const [totalSeconds, setTotalSeconds] = useState(0);
+
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   useEffect(() => {
@@ -68,35 +70,7 @@ export default function EmployeeDashboardPage() {
     }
   };
 
-  // Handle Check-In
-  const handleCheckIn = () => {
-    const now = Date.now();
-    setIsCheckedIn(true);
-    setIsTimerRunning(true);
-    setTimerStarted(now);
-    setTotalSeconds(0);
-    
-    // Save to localStorage
-    localStorage.setItem('employeeTimer', JSON.stringify({
-      startTime: now,
-      isCheckedIn: true
-    }));
-    
-    toast.success('✅ Checked in successfully!');
-  };
 
-  // Handle Check-Out
-  const handleCheckOut = () => {
-    setIsCheckedIn(false);
-    setIsTimerRunning(false);
-    setTotalSeconds(0);
-    setTimerStarted(null);
-    
-    // Clear localStorage
-    localStorage.removeItem('employeeTimer');
-    
-    toast.success(`👋 Checked out! Total time: ${formatTime(totalSeconds)}`);
-  };
 
   // Format time (HH:MM:SS)
   const formatTime = (seconds) => {
@@ -111,14 +85,8 @@ export default function EmployeeDashboardPage() {
   return (
     <>
       {/* Timer Header */}
-      <TimerHeader
-        isCheckedIn={isCheckedIn}
-        timerDisplay={formatTime(totalSeconds)}
-        onCheckIn={handleCheckIn}
-        onCheckOut={handleCheckOut}
-        isTimerRunning={isTimerRunning}
-      />
-
+    
+   {user?.role === "employee" && <AttendanceCard />}
       <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">
         My Dashboard
       </h1>
