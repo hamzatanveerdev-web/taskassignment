@@ -25,7 +25,7 @@ export default function TimerHeader({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`
-          sticky top-0 z-50
+          sticky top-0 z-51
           w-full px-4 py-3 md:py-4
           border-b-2
           backdrop-blur-sm
