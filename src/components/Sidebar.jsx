@@ -24,14 +24,20 @@ export default function Sidebar({ isOpen, isMobile, onClose, onMouseEnter, onMou
     { path: '/admin/dashboard', icon: FiHome, label: 'Dashboard' },
     {
       icon: FiUsers, 
-      label: 'Employees', 
+      label: 'Manage Employees', 
       children: [
-        { path: '/admin/employees', label: 'Add Employees' },
-        { path: '/admin/employees/attendance', label: 'Attendance' }
+        { path: '/admin/employees', label: 'Employees' },
+        { path: '/admin/employees/attendance', label: 'Attendance Records' }
       ]
     },
-    { path: '/admin/assign-task', icon: FiCheckSquare, label: 'Assign Task' },
-    { path: '/admin/task-history', icon: FiBarChart2, label: 'Task History' },
+      {
+      icon: FiUsers, 
+      label: 'Work & Tasks', 
+      children: [
+        { path: '/admin/assign-task', label: 'Assign Task' },
+        { path: '/admin/task-history', label: 'Task History' }
+      ]
+    },
     { path: '/admin/notifications', icon: FiBell, label: 'Notifications' },
     { path: '/admin/settings', icon: FiSettings, label: 'Settings' },
   ];
@@ -64,7 +70,7 @@ export default function Sidebar({ isOpen, isMobile, onClose, onMouseEnter, onMou
 
   const getSidebarWidth = () => {
     if (isMobile) return isOpen ? 256 : 0;
-    return isOpen ? 256 : 80;
+    return isOpen ? 256 : 70;
   };
 
   const toggleMobileMenu = (label) => {
@@ -75,7 +81,7 @@ export default function Sidebar({ isOpen, isMobile, onClose, onMouseEnter, onMou
 
   return (
     <motion.aside
-      className="bg-gray-900 text-white fixed left-0 top-0 h-screen z-50 flex flex-col shadow-2xl overflow-hidden"
+      className="bg-gray-900 text-white fixed left-0 top-0 h-screen z-50 flex flex-col  overflow-hidden"
       initial={false}
       animate={{
         width: getSidebarWidth(),
@@ -93,7 +99,7 @@ export default function Sidebar({ isOpen, isMobile, onClose, onMouseEnter, onMou
       onMouseLeave={onMouseLeave}
     >
       {/* Header - Fixed */}
-      <div className="px-4 py-4 border-b border-gray-800 flex items-center justify-between flex-shrink-0">
+      <div className="px-2 py-4 border-b border-gray-800 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3 flex-1 overflow-hidden">
           <motion.h2 
             className="text-lg font-bold text-[#3BC0E1] whitespace-nowrap"

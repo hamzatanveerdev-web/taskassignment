@@ -228,11 +228,11 @@ export default function EmployeeAttendance() {
 
       {/* 📊 Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <StatCard label="Total" value={stats.total} color="blue"  />
-        <StatCard label="Present" value={stats.present} color="green"/>
-        <StatCard label="Late" value={stats.late} color="yellow"/>
+        <StatCard label="Total" value={stats.total} color="blue" />
+        <StatCard label="Present" value={stats.present} color="green" />
+        <StatCard label="Late" value={stats.late} color="yellow" />
         <StatCard label="Absent" value={stats.absent} color="red" />
-        <StatCard label="On Leave" value={stats.onLeave} color="purple"/>
+        <StatCard label="On Leave" value={stats.onLeave} color="purple" />
       </div>
 
       {/* 🔍 Filters */}
@@ -423,24 +423,20 @@ export default function EmployeeAttendance() {
                         <td className="px-4 md:px-6 py-3 font-medium text-gray-800">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-[#3BC0E1] bg-opacity-20 text-[#3BC0E1] flex items-center justify-center text-sm font-bold">
-                              {emp.employeeId.fullName?.charAt(0) || '?'}
+                              {emp.employeeRef?.fullName?.charAt(0)}
                             </div>
-                            <span>{emp.employeeId.fullName}</span>
+                            <span>{emp.employeeRef?.fullName}</span>
                           </div>
                         </td>
 
                         <td className="px-4 md:px-6 py-3 text-gray-600 text-sm">
                           <span className="block max-w-[180px] truncate" title={emp.employeeId?.email}>
-                            {emp.employeeId?.email}
+                            {emp.employeeRef?.email}
                           </span>
                         </td>
                         <td className="px-4 md:px-6 py-3">{formatDate(emp.date)}</td>
-                        <td className="px-4 md:px-6 py-3 font-mono text-sm">
-                          {new Date(emp.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' ,hour12:true,  timeZone: 'Asia/Karachi' })}
-                        </td>
-                        <td className="px-4 md:px-6 py-3 font-mono text-sm">
-                          {new Date(emp.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit',hour12:true,  timeZone: 'Asia/Karachi'  })}
-                        </td>
+                        <td className="px-4 md:px-6 py-3 font-mono text-sm">{emp.checkIn ? new Date(emp.checkIn).toLocaleTimeString('en-PK', {hour: '2-digit',minute: '2-digit',hour12: true,timeZone: 'Asia/Karachi'}) : '-'}</td>
+                        <td className="px-4 md:px-6 py-3 font-mono text-sm">{emp.checkOut ? new Date(emp.checkOut).toLocaleTimeString('en-PK', {hour: '2-digit',minute: '2-digit',hour12: true,timeZone: 'Asia/Karachi'}) : '-'}</td>
                         <td className="px-4 md:px-6 py-3 text-sm">
                           {duration > 0 ? `${Math.round(duration * 60)} min` : '-'}
                         </td>

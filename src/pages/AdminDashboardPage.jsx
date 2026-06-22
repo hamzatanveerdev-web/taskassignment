@@ -67,7 +67,9 @@ export default function AdminDashboardPage() {
 
   return (
     <>
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">Dashboard</h1>
+<h1 className="text-sm md:text-xl font-medium text-gray-900 dark:text-white mb-6 md:mb-8">
+  Dashboard
+</h1>
 
       {analytics && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">

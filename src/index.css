@@ -30,7 +30,7 @@ body {
   }
 
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all;
+    @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-all;
   }
 
   .card-hover {
