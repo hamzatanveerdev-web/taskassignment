@@ -430,7 +430,7 @@ export default function EmployeeAttendance() {
                         </td>
 
                         <td className="px-4 md:px-6 py-3 text-gray-600 text-sm">
-                          <span className="block max-w-[180px] truncate" title={emp.employeeId?.email}>
+                          <span className="block max-w-[180px] truncate" title={emp.employeeRef?.email}>
                             {emp.employeeRef?.email}
                           </span>
                         </td>
